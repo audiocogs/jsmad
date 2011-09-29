@@ -3,7 +3,7 @@ Mad.MP3File = function(stream) {
 }
 
 Mad.MP3File.prototype.getID3v2Header = function() {
-    if (this.stream.get(0, 3) == "ID3") {
+    if (this.stream.strEquals(0, "ID3")) {
         var headerStream = new Mad.SubStream(this.stream, 0, 10);
         
         headerStream.read(3); // 'ID3'

@@ -14,10 +14,10 @@ var domReady = function ()
             console.log("File loaded");
             var mpeg = mp3.getMpegStream();
            
-            console.log("Decoding first 2000 frames"); 
+            console.log("Decoding first 1 frames"); 
             var frame = new Mad.Frame();
 
-            for(var i = 0; i < 2000; i += 1) {
+            for(var i = 0; i < 1; i += 1) {
                 frame = Mad.Frame.decode(frame, mpeg);
             }
             console.log("Done!");

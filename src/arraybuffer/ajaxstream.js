@@ -146,7 +146,7 @@ Mad.AjaxStream.prototype.get = function(offset, length) {
     }
 }
 
-Mad.ByteStream.prototype.getU8 = function(offset, bigEndian) {
+Mad.AjaxStream.prototype.getU8 = function(offset, bigEndian) {
 	if(this.state.byteBuffer) {
 		return this.state.byteBuffer[offset];
 	}

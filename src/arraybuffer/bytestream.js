@@ -4,10 +4,21 @@ Mad.ByteStream.prototype.available = function(n) {
     return this.absoluteAvailable(this.state.offset + n);
 }
 
+Mad.ByteStream.prototype.strEquals = function (offset, string) {
+    for (var i = 0; i < string.length; i++) {
+        var left = this.getU8(offset + i, false);
+        var right = string.charCodeAt(i);
+
+        console.log(left + " vs " + right);
+        if(left != right) return false;
+    }
+    return true;
+}
+
 Mad.ByteStream.prototype.getU8 = function(offset, bigEndian) {
     var bytes = this.get(offset, 1);
-    
-    return bytes.charCodeAt(0);
+    console.log("get(" + offset + ") = " + bytes[0]);
+    return bytes[0];
 }
 
 Mad.ByteStream.prototype.getU16 = function(offset, bigEndian) {
@@ -17,7 +28,7 @@ Mad.ByteStream.prototype.getU16 = function(offset, bigEndian) {
         bytes = bytes.reverse();
     }
     
-    return (bytes.charCodeAt(0) << 8) | bytes.charCodeAt(1);
+    return (bytes[0] << 8) | bytes[1];
 }
 
 Mad.ByteStream.prototype.getU24 = function(offset, bigEndian) {
@@ -27,7 +38,7 @@ Mad.ByteStream.prototype.getU24 = function(offset, bigEndian) {
         bytes = bytes.reverse();
     }
     
-    return (bytes.charCodeAt(0) << 16) | (bytes.charCodeAt(1) << 8) | bytes.charCodeAt(2);
+    return (bytes[0] << 16) | (bytes[1] << 8) | bytes[2];
 }
 
 Mad.ByteStream.prototype.getU32 = function(offset, bigEndian) {
@@ -37,7 +48,7 @@ Mad.ByteStream.prototype.getU32 = function(offset, bigEndian) {
         bytes = bytes.reverse();
     }
     
-    return (bytes.charCodeAt(0) << 24) | (bytes.charCodeAt(1) << 16) | (bytes.charCodeAt(2) << 8) | bytes.charCodeAt(3);
+    return (bytes[0] << 24) | (bytes[1] << 16) | (bytes[2] << 8) | bytes[3];
 }
 
 Mad.ByteStream.prototype.getI8 = function(offset, bigEndian) {
@@ -55,7 +66,7 @@ Mad.ByteStream.prototype.getI32 = function(offset, bigEndian) {
 Mad.ByteStream.prototype.getSyncInteger = function(offset) {
     var bytes = this.get(offset, 4);
     
-    return (bytes.charCodeAt(0) << 21) | (bytes.charCodeAt(1) << 14) | (bytes.charCodeAt(2) << 7) | bytes.charCodeAt(3);
+    return (bytes[0] << 21) | (bytes[1] << 14) | (bytes[2] << 7) | bytes[3];
 }
 
 Mad.ByteStream.prototype.peekU8 = function(bigEndian) {

@@ -4,10 +4,11 @@ Mad.FileStream = function(file, callback) {
     var self = this, reader = new FileReader();
     
     reader.onload = function () {
+      console.log("Read whole file!");
       self.state.buffer        = reader.result;
       self.state.mainView      = new Uint8Array(self.state.buffer);
-      self.state.amountRead    = self.state.buffer.length;
-      self.state.contentLength = self.state.buffer.length;
+      self.state.amountRead    = self.state.buffer.byteLength;
+      self.state.contentLength = self.state.buffer.byteLength;
       
       self.length = self.state.amountRead;
       
@@ -27,9 +28,8 @@ Mad.FileStream.prototype.absoluteAvailable = function(n, updated) {
     return n < this.state.amountRead;
 }
 
-Mad.ByteStream.prototype.getU8 = function(offset, bigEndian) {
-    var bytes = this.get(offset, 1);
-    return bytes.charCodeAt(0);
+Mad.FileStream.prototype.getU8 = function(offset, bigEndian) {
+    return this.state.mainView[offset];
 }
 
 
@@ -59,7 +59,7 @@ Mad.FileStream.prototype.peek = function(n) {
 
 Mad.FileStream.prototype.get = function(offset, length) {
     if (offset + length < this.state.contentLength) {
-        return this.state.buffer.slice(offset, offset + length);
+        return new Uint8Array(this.state.buffer, offset, length);
     } else {
         throw 'TODO: THROW GET ERROR!';
     }
