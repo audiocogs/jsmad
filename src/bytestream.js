@@ -1,7 +1,7 @@
 Mad.ByteStream = function(url) { }
 
 Mad.ByteStream.prototype.available = function(n) {
-    return this.absoluteAvailable(this.state['offset'] + n);
+    return this.absoluteAvailable(this.state.offset + n);
 }
 
 Mad.ByteStream.prototype.getU8 = function(offset, bigEndian) {
@@ -59,35 +59,35 @@ Mad.ByteStream.prototype.getSyncInteger = function(offset) {
 }
 
 Mad.ByteStream.prototype.peekU8 = function(bigEndian) {
-    return this.getU8(this.state['offset'], bigEndian);
+    return this.getU8(this.state.offset, bigEndian);
 }
 
 Mad.ByteStream.prototype.peekU16 = function(bigEndian) {
-    return this.getU16(this.state['offset'], bigEndian);
+    return this.getU16(this.state.offset, bigEndian);
 }
 
 Mad.ByteStream.prototype.peekU24 = function(bigEndian) {
-    return this.getU24(this.state['offset'], bigEndian);
+    return this.getU24(this.state.offset, bigEndian);
 }
 
 Mad.ByteStream.prototype.peekU32 = function(bigEndian) {
-    return this.getU32(this.state['offset'], bigEndian);
+    return this.getU32(this.state.offset, bigEndian);
 }
 
 Mad.ByteStream.prototype.peekI8 = function(bigEndian) {
-    return this.getI8(this.state['offset'], bigEndian);
+    return this.getI8(this.state.offset, bigEndian);
 }
 
 Mad.ByteStream.prototype.peekI16 = function(bigEndian) {
-    return this.getI16(this.state['offset'], bigEndian);
+    return this.getI16(this.state.offset, bigEndian);
 }
 
 Mad.ByteStream.prototype.peekI32 = function(bigEndian) {
-    return this.getI32(this.state['offset'], bigEndian);
+    return this.getI32(this.state.offset, bigEndian);
 }
 
 Mad.ByteStream.prototype.peekSyncInteger = function() {
-    return this.getSyncInteger(this.state['offset']);
+    return this.getSyncInteger(this.state.offset);
 }
 
 Mad.ByteStream.prototype.readU8 = function(bigEndian) {
@@ -147,7 +147,7 @@ Mad.ByteStream.prototype.readI32 = function(bigEndian) {
 }
 
 Mad.ByteStream.prototype.readSyncInteger = function() {
-    var result = this.getSyncInteger(this.state['offset']);
+    var result = this.getSyncInteger(this.state.offset);
     
     this.seek(4);
     

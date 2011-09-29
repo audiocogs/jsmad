@@ -373,7 +373,6 @@ Mad.Frame.decode = function(frame, stream) {
 
     // TODO: actually decode the data :)
     if (decoder_table[frame.header.layer - 1](stream, frame) == -1) {
-    
         if (!Mad.recoverable(stream.error))
             stream.next_frame = stream.this_frame;
         return null;
