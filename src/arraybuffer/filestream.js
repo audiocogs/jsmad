@@ -1,6 +1,10 @@
 
+Mad.uglyDebug = 200;
+
 Mad.ArrayBuffers.FileStream = Mad.ArrayBuffers.ByteStream.extend({
     init: function (file, callback) {
+        this.offset        = 0;
+
         // Check for the various File API support.
         if (window.File && window.FileReader && window.FileList && window.Blob) {
             // Great success! All the File APIs are supported.
@@ -12,7 +16,6 @@ Mad.ArrayBuffers.FileStream = Mad.ArrayBuffers.ByteStream.extend({
         var self = this;
         var reader = new FileReader();
         reader.onload = function () {
-          console.log("Just read whole file!");
           self.buffer        = new Uint8Array(reader.result);
           self.amountRead    = self.buffer.length;
           self.contentLength = self.buffer.length;
@@ -38,7 +41,12 @@ Mad.ArrayBuffers.FileStream = Mad.ArrayBuffers.ByteStream.extend({
     },
 
     getU8: function(offset, bigEndian) {
-        return this.buffer[offset];
+        var result = this.buffer[offset];
+        if(Mad.uglyDebug >= 0) {
+            console.log("get(" + offset + ") = " + result);
+            Mad.uglyDebug--;
+        }
+        return result;
     },
 
     seek: function(n) {
@@ -67,7 +75,8 @@ Mad.ArrayBuffers.FileStream = Mad.ArrayBuffers.ByteStream.extend({
 
     get: function(offset, length) {
         if (offset + length < this.contentLength) {
-            return this.buffer.subarray(offset, length);
+            var subarr = this.buffer.subarray(offset, offset + length);
+            return subarr;
         } else {
             throw 'TODO: THROW GET ERROR!';
         }

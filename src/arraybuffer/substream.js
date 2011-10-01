@@ -3,9 +3,7 @@ Mad.ArrayBuffers.SubStream = Mad.ArrayBuffers.ByteStream.extend({
     init: function(stream, offset, length) {
         this.offset = 0; 
         this.start = offset;
-        
         this.parentStream = stream;
-        
         this.length = length;
     },
 

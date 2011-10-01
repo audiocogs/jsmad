@@ -6,7 +6,7 @@ Mad.MP3File.prototype.getID3v2Header = function() {
     if (this.stream.strEquals(0, "ID3")) {
         var headerStream = this.stream.substream(0, 10);
         
-        headerStream.read(3); // 'ID3'
+        headerStream.seek(3); // 'ID3'
         
         var major = headerStream.readU8();
         var minor = headerStream.readU8();

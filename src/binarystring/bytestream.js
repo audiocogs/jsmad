@@ -13,6 +13,7 @@ Mad.BinaryStrings.ByteStream.prototype.strEquals = function (offset, string) {
 
 Mad.BinaryStrings.ByteStream.prototype.getU8 = function(offset, bigEndian) {
     var bytes = this.get(offset, 1);
+    console.log("get(" + offset + ") = " + bytes.charCodeAt(0));
     return bytes.charCodeAt(0);
 }
 

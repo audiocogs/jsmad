@@ -14,7 +14,7 @@ var domReady = function ()
             console.log("File loaded");
             var mpeg = mp3.getMpegStream();
           
-            var howmuch = 1000; 
+            var howmuch = 1; 
             var ss1 = Date.now();
             console.log("Decoding first " + howmuch + " frames"); 
             var frame = new Mad.Frame();
