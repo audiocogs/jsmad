@@ -8,7 +8,7 @@ var CHAR_BIT = 8;
  */
 Mad.Bit = function (stream, offset) {
     if (typeof(stream) == 'string') {
-        this.stream = new Mad.StringStream(stream);
+        this.stream = new Mad.BinaryStrings.StringStream(stream);
     } else {
         this.stream = stream;
     }

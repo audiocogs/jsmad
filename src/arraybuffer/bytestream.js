@@ -1,5 +1,5 @@
 
-Mad.ByteStream = Class.extend({
+Mad.ArrayBuffers.ByteStream = Class.extend({
     available: function(n) {
         return this.absoluteAvailable(this.state.offset + n);
     },

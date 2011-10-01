@@ -4,7 +4,7 @@ Mad.MP3File = function(stream) {
 
 Mad.MP3File.prototype.getID3v2Header = function() {
     if (this.stream.strEquals(0, "ID3")) {
-        var headerStream = new Mad.SubStream(this.stream, 0, 10);
+        var headerStream = this.stream.substream(0, 10);
         
         headerStream.read(3); // 'ID3'
         
@@ -26,9 +26,9 @@ Mad.MP3File.prototype.getID3v2Stream = function() {
     
     if (header) {
         if (header.major > 2) {
-            return new Mad.ID3v23Stream(header, new Mad.SubStream(this.stream, 10, header.length));
+            return new Mad.ID3v23Stream(header, this.stream.substream(10, header.length));
         } else {
-            return new Mad.ID3v22Stream(header, new Mad.SubStream(this.stream, 10, header.length));
+            return new Mad.ID3v22Stream(header, this.stream.substream(10, header.length));
         }
     } else {
         return null;
@@ -45,6 +45,6 @@ Mad.MP3File.prototype.getMpegStream = function() {
     }
     
     var length = this.stream.length - offset;
-    
-    return new Mad.Stream(new Mad.SubStream(this.stream, offset), length);
+
+    return new Mad.Stream(this.stream.substream(offset), length);   
 }

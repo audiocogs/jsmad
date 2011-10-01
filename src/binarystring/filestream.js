@@ -1,4 +1,4 @@
-Mad.FileStream = function(file, callback) {
+Mad.BinaryStrings.FileStream = function(file, callback) {
     this.state = { 'offset': 0 };
     
     var self = this, reader = new FileReader();
@@ -20,21 +20,21 @@ Mad.FileStream = function(file, callback) {
     reader.readAsBinaryString(file);
 }
 
-Mad.FileStream.prototype = new Mad.ByteStream();
+Mad.BinaryStrings.FileStream.prototype = new Mad.BinaryStrings.ByteStream();
 
-Mad.FileStream.prototype.absoluteAvailable = function(n, updated) {
+Mad.BinaryStrings.FileStream.prototype.absoluteAvailable = function(n, updated) {
     return n < this.state['amountRead'];
 }
 
-Mad.FileStream.prototype.substream = function (offset, length) {
-    return new Mad.SubStream(this, offset, length);
+Mad.BinaryStrings.FileStream.prototype.substream = function (offset, length) {
+    return new Mad.BinaryStrings.SubStream(this, offset, length);
 }
 
-Mad.FileStream.prototype.seek = function(n) {
+Mad.BinaryStrings.FileStream.prototype.seek = function(n) {
     this.state['offset'] += n;
 }
 
-Mad.FileStream.prototype.read = function(n) {
+Mad.BinaryStrings.FileStream.prototype.read = function(n) {
     var result = this.peek(n);
     
     this.seek(n);
@@ -42,7 +42,7 @@ Mad.FileStream.prototype.read = function(n) {
     return result;
 }
 
-Mad.FileStream.prototype.peek = function(n) {
+Mad.BinaryStrings.FileStream.prototype.peek = function(n) {
     if (this.available(n)) {
         var offset = this.state['offset'];
         
@@ -54,7 +54,7 @@ Mad.FileStream.prototype.peek = function(n) {
     }
 }
 
-Mad.FileStream.prototype.get = function(offset, length) {
+Mad.BinaryStrings.FileStream.prototype.get = function(offset, length) {
     if (this.absoluteAvailable(offset + length)) {
         return this.state['buffer'].slice(offset, offset + length);
     } else {

@@ -1,4 +1,4 @@
-Mad.AjaxStream = function(url) {
+Mad.ArrayBuffers.AjaxStream = function(url) {
     this.state = { 'offset': 0 };
     
     var request = window.XMLHttpRequest ? new XMLHttpRequest() :  ActiveXObject("Microsoft.XMLHTTP");
@@ -60,9 +60,9 @@ Mad.AjaxStream = function(url) {
     request.send(null);
 }
 
-Mad.AjaxStream.prototype = new Mad.ByteStream();
+Mad.ArrayBuffers.AjaxStream.prototype = new Mad.ByteStream();
 
-Mad.AjaxStream.prototype.updateBuffer = function() {
+Mad.ArrayBuffers.AjaxStream.prototype.updateBuffer = function() {
     if (!this.state.finalAmount) {
         this.state.arrayBuffer = this.state.request.mozResponseArrayBuffer;
         if(this.state.arrayBuffer) {
@@ -90,7 +90,7 @@ Mad.AjaxStream.prototype.updateBuffer = function() {
     }
 }
 
-Mad.AjaxStream.prototype.absoluteAvailable = function(n, updated) {
+Mad.ArrayBuffers.AjaxStream.prototype.absoluteAvailable = function(n, updated) {
     if (n > this.state.amountRead) {
         if (updated) {
             throw new Error("buffer underflow with absoluteAvailable!");
@@ -104,11 +104,11 @@ Mad.AjaxStream.prototype.absoluteAvailable = function(n, updated) {
     }
 }
 
-Mad.AjaxStream.prototype.seek = function(n) {
+Mad.ArrayBuffers.AjaxStream.prototype.seek = function(n) {
     this.state.offset += n;
 }
 
-Mad.AjaxStream.prototype.read = function(n) {
+Mad.ArrayBuffers.AjaxStream.prototype.read = function(n) {
     var result = this.peek(n);
     
     this.seek(n);
@@ -116,7 +116,7 @@ Mad.AjaxStream.prototype.read = function(n) {
     return result;
 }
 
-Mad.AjaxStream.prototype.peek = function(n) {
+Mad.ArrayBuffers.AjaxStream.prototype.peek = function(n) {
     if (this.available(n)) {
         var offset = this.state.offset;
         
@@ -128,7 +128,7 @@ Mad.AjaxStream.prototype.peek = function(n) {
     }
 }
 
-Mad.AjaxStream.prototype.get = function(offset, length) {
+Mad.ArrayBuffers.AjaxStream.prototype.get = function(offset, length) {
     if (this.absoluteAvailable(offset + length)) {
 		var tmpbuffer = "";
 		if(this.state.byteBuffer) {
@@ -146,7 +146,7 @@ Mad.AjaxStream.prototype.get = function(offset, length) {
     }
 }
 
-Mad.AjaxStream.prototype.getU8 = function(offset, bigEndian) {
+Mad.ArrayBuffers.AjaxStream.prototype.getU8 = function(offset, bigEndian) {
 	if(this.state.byteBuffer) {
 		return this.state.byteBuffer[offset];
 	}
@@ -154,7 +154,7 @@ Mad.AjaxStream.prototype.getU8 = function(offset, bigEndian) {
     return this.get(offset, 1).charCodeAt(0);
 }
 
-Mad.AjaxStream.prototype.requestAbsolute = function(n, callback) {
+Mad.ArrayBuffers.AjaxStream.prototype.requestAbsolute = function(n, callback) {
     if (n < this.state.amountRead) {
         callback();
     } else {
@@ -162,6 +162,6 @@ Mad.AjaxStream.prototype.requestAbsolute = function(n, callback) {
     }
 }
 
-Mad.AjaxStream.prototype.request = function(n, callback) {
+Mad.ArrayBuffers.AjaxStream.prototype.request = function(n, callback) {
     this.requestAbsolute(this.state.offset + n, callback);
 }

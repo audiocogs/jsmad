@@ -1,18 +1,18 @@
-Mad.StringStream = function(string) {
+Mad.BinaryStrings.StringStream = function(string) {
     this.state = { offset: 0, buffer: string, amountRead: string.length, length: string.length };
 }
 
-Mad.StringStream.prototype = new Mad.ByteStream();
+Mad.BinaryStrings.StringStream.prototype = new Mad.BinaryStrings.ByteStream();
 
-Mad.StringStream.prototype.absoluteAvailable = function(n, updated) {
+Mad.BinaryStrings.StringStream.prototype.absoluteAvailable = function(n, updated) {
     return n < this.state['amountRead'];
 }
 
-Mad.StringStream.prototype.seek = function(n) {
+Mad.BinaryStrings.StringStream.prototype.seek = function(n) {
     this.state['offset'] += n;
 }
 
-Mad.StringStream.prototype.read = function(n) {
+Mad.BinaryStrings.StringStream.prototype.read = function(n) {
     var result = this.peek(n);
     
     this.seek(n);
@@ -20,7 +20,7 @@ Mad.StringStream.prototype.read = function(n) {
     return result;
 }
 
-Mad.StringStream.prototype.peek = function(n) {
+Mad.BinaryStrings.StringStream.prototype.peek = function(n) {
     if (this.available(n)) {
         var offset = this.state['offset'];
         
@@ -32,7 +32,7 @@ Mad.StringStream.prototype.peek = function(n) {
     }
 }
 
-Mad.StringStream.prototype.get = function(offset, length) {
+Mad.BinaryStrings.StringStream.prototype.get = function(offset, length) {
     if (this.absoluteAvailable(offset + length)) {
         return this.state['buffer'].slice(offset, offset + length);
     } else {

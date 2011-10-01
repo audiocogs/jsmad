@@ -1,6 +1,8 @@
 
-/* Global namespace */
+/* Namespaces */
 Mad = {};
+Mad.ArrayBuffers = {};
+Mad.BinaryStrings = {};
 
 Mad.recoverable = function (error) {
     return (error & 0xff00) != 0;
@@ -24,6 +26,9 @@ if (!Mad.enforceBinaryString && typeof(ArrayBuffer) === 'function' && typeof(Uin
             return dst;
         }
     };
+    Mad.FileStream = function (file, callback) {
+        return new Mad.ArrayBuffers.FileStream(file, callback);
+    }
 } else {
     console.log("Using BinaryString");
     Mad.Storage = {
@@ -38,6 +43,9 @@ if (!Mad.enforceBinaryString && typeof(ArrayBuffer) === 'function' && typeof(Uin
             return dst.slice(0, dstOffset) + src.slice(srcOffset, srcOffset + length) + dst.slice(dstOffset + length);
         }
     };
+    Mad.FileStream = function (file, callback) {
+        return new Mad.BinaryStrings.FileStream(file, callback);
+    }
 }
 
 // credit: http://blog.stevenlevithan.com/archives/fast-string-multiply

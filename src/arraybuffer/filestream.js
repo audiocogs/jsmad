@@ -1,5 +1,5 @@
 
-Mad.FileStream = Mad.ByteStream.extend({
+Mad.ArrayBuffers.FileStream = Mad.ArrayBuffers.ByteStream.extend({
     init: function (file, callback) {
         this.state = { offset: 0 };
 
