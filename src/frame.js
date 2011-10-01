@@ -363,19 +363,17 @@ Mad.Frame.decode = function(frame, stream) {
         frame.header = Mad.Header.decode(stream);
         if(frame.header == null) {
             // something went wrong
-            return null;
+            throw 'Header decoding failed';
         }
     }
 
-    /* audio_data() */
-
     frame.header.flags &= ~Mad.Flag.INCOMPLETE;
 
-    // TODO: actually decode the data :)
     if (decoder_table[frame.header.layer - 1](stream, frame) == -1) {
-        if (!Mad.recoverable(stream.error))
+        if (!Mad.recoverable(stream.error)) {
             stream.next_frame = stream.this_frame;
-        return null;
+        }
+        throw 'Decoder table error';
     }
     
     return frame;

@@ -10,6 +10,11 @@ Mad.SubStream = function(stream, offset, length) {
 
 Mad.SubStream.prototype = new Mad.ByteStream;
 
+Mad.SubStream.prototype.substream = function (offset, length) {
+    return new Mad.SubStream(this.parentStream, this.state.start + offset, length);
+}
+
+
 Mad.SubStream.prototype.absoluteAvailable = function(n) {
     return this.parentStream.absoluteAvailable(this.state['start'] + n);
 }

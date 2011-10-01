@@ -1326,8 +1326,8 @@ Mad.layer_III = function (stream, frame) {
                 frame_used = md_len - si.main_data_begin;
                 
                 /* memcpy(dst, dstOffset, src, srcOffset, length) - returns a copy of dst with modified bytes */
-                stream.main_data = Mad.memcpy(stream.main_data, stream.md_len, stream.ptr.stream, stream.ptr.nextbyte(), frame_used);
-                
+                stream.main_data = Mad.Storage.memcpy(stream.main_data, stream.md_len, stream.ptr.stream, stream.ptr.nextbyte(), frame_used);
+
                 /*
                 // Keeping this here as a handy little reference
                 memcpy(*stream.main_data + stream.md_len,
@@ -1370,7 +1370,7 @@ Mad.layer_III = function (stream, frame) {
 
     /* preload main_data buffer with up to 511 bytes for next frame(s) */
     if (frame_free >= next_md_begin) {
-        stream.main_data = Mad.memcpy(stream.main_data, 0, stream.stream, stream.next_frame - next_md_begin, next_md_begin);
+        stream.main_data = Mad.Storage.memcpy(stream.main_data, 0, stream.stream, stream.next_frame - next_md_begin, next_md_begin);
         /*
         // Keeping here for reference
         memcpy(*stream.main_data, stream.next_frame - next_md_begin, next_md_begin);
@@ -1383,7 +1383,7 @@ Mad.layer_III = function (stream, frame) {
                 extra = next_md_begin - frame_free;
 
             if (extra < stream.md_len) {
-                stream.main_data = Mad.memcpy(stream.main_data, 0, stream.main_data, stream.md_len - extra, extra);
+                stream.main_data = Mad.Storage.memcpy(stream.main_data, 0, stream.main_data, stream.md_len - extra, extra);
                 /*
                 // Keeping here for reference
                 memmove(*stream.main_data, *stream.main_data + stream.md_len - extra, extra);
@@ -1394,7 +1394,7 @@ Mad.layer_III = function (stream, frame) {
             stream.md_len = 0;
         }
 
-        stream.main_data = Mad.memcpy(stream.main_data, stream.md_len, stream.stream, stream.next_frame - frame_free, frame_free);
+        stream.main_data = Mad.Storage.memcpy(stream.main_data, stream.md_len, stream.stream, stream.next_frame - frame_free, frame_free);
         /*
         // Keeping here for reference
         memcpy(*stream.main_data + stream.md_len, stream.next_frame - frame_free, frame_free);

@@ -26,6 +26,10 @@ Mad.FileStream.prototype.absoluteAvailable = function(n, updated) {
     return n < this.state['amountRead'];
 }
 
+Mad.FileStream.prototype.substream = function (offset, length) {
+    return new Mad.SubStream(this, offset, length);
+}
+
 Mad.FileStream.prototype.seek = function(n) {
     this.state['offset'] += n;
 }
