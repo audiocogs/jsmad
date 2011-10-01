@@ -255,9 +255,9 @@ Mad.Header.decode = function(stream) {
         header = Mad.Header.actually_decode(stream);
         if(header == null) return null; // well Duh^2
 
-        console.log("============= Decoding layer " + header.layer + " audio mode " +
-             header.mode + " with " + header.bitrate +
-             " bps and a samplerate of " + header.samplerate);
+        //console.log("============= Decoding layer " + header.layer + " audio mode " +
+        //     header.mode + " with " + header.bitrate +
+        //     " bps and a samplerate of " + header.samplerate);
 
         /* calculate frame duration */
         //mad_timer_set(&header.duration, 0, 32 * MAD_NSBSAMPLES(header), header.samplerate);
