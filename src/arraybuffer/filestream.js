@@ -1,8 +1,6 @@
 
 Mad.ArrayBuffers.FileStream = Mad.ArrayBuffers.ByteStream.extend({
     init: function (file, callback) {
-        this.state = { offset: 0 };
-
         // Check for the various File API support.
         if (window.File && window.FileReader && window.FileList && window.Blob) {
             // Great success! All the File APIs are supported.
@@ -15,12 +13,10 @@ Mad.ArrayBuffers.FileStream = Mad.ArrayBuffers.ByteStream.extend({
         var reader = new FileReader();
         reader.onload = function () {
           console.log("Just read whole file!");
-          self.state.buffer        = reader.result;
-          self.state.mainView      = new Uint8Array(self.state.buffer);
-          self.state.amountRead    = self.state.buffer.byteLength;
-          self.state.contentLength = self.state.buffer.byteLength;
-          
-          self.length = self.state.amountRead;
+          self.buffer        = new Uint8Array(reader.result);
+          self.amountRead    = self.buffer.length;
+          self.contentLength = self.buffer.length;
+          self.length = self.amountRead;
           
           callback(self);
         }
@@ -29,25 +25,24 @@ Mad.ArrayBuffers.FileStream = Mad.ArrayBuffers.ByteStream.extend({
             console.log("Error loading file " + file);
         }
 
-
         // Only supported from Firefox 7 and Chrome 'Something'
         reader.readAsArrayBuffer(file);
     },
 
     substream: function (offset, length) {
-        return new Mad.SubStream(this, offset, length);
+        return new Mad.ArrayBuffers.SubStream(this, offset, length);
     },
 
     absoluteAvailable: function(n, updated) {
-        return n < this.state.amountRead;
+        return n < this.amountRead;
     },
 
     getU8: function(offset, bigEndian) {
-        return this.state.mainView[offset];
+        return this.buffer[offset];
     },
 
     seek: function(n) {
-        this.state.offset += n;
+        this.offset += n;
     },
 
     read: function(n) {
@@ -60,7 +55,7 @@ Mad.ArrayBuffers.FileStream = Mad.ArrayBuffers.ByteStream.extend({
 
     peek: function(n) {
         if (this.available(n)) {
-            var offset = this.state.offset;
+            var offset = this.offset;
             
             var result = this.get(offset, n);
             
@@ -71,8 +66,8 @@ Mad.ArrayBuffers.FileStream = Mad.ArrayBuffers.ByteStream.extend({
     },
 
     get: function(offset, length) {
-        if (offset + length < this.state.contentLength) {
-            return new Uint8Array(this.state.buffer, offset, length);
+        if (offset + length < this.contentLength) {
+            return this.buffer.subarray(offset, length);
         } else {
             throw 'TODO: THROW GET ERROR!';
         }

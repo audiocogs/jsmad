@@ -1,53 +1,63 @@
 
-Mad.ArrayBuffers.SubStream = function(stream, offset, length) {
-    this.state = { 'offset': 0 };
-    
-    this.state['start'] = offset;
-    
-    this.parentStream = stream;
-    
-    this.length = length;
-}
+Mad.ArrayBuffers.SubStream = Mad.ArrayBuffers.ByteStream.extend({
+    init: function(stream, offset, length) {
+        this.offset = 0; 
+        this.start = offset;
+        
+        this.parentStream = stream;
+        
+        this.length = length;
+    },
 
-Mad.ArrayBuffers.SubStream.prototype = new Mad.ArrayBuffers.ByteStream;
+    substream: function (offset, length) {
+        return new Mad.SubStream(this.parentStream, this.start + offset, length);
+    },
 
-Mad.ArrayBuffers.SubStream.prototype.substream = function (offset, length) {
-    return new Mad.ArrayBuffers.SubStream(this.parentStream, this.state.start + offset, length);
-}
+    getU8: function(offset, bigEndian) {
+        return this.parentStream.getU8(this.start + offset, bigEndian);
+    },
 
+    getU16: function(offset, bigEndian) {
+        return this.parentStream.getU16(this.start + offset, bigEndian);
+    },
 
-Mad.ArrayBuffers.SubStream.prototype.absoluteAvailable = function(n) {
-    return this.parentStream.absoluteAvailable(this.state['start'] + n);
-}
+    getU32: function(offset, bigEndian) {
+        return this.parentStream.getU32(this.start + offset, bigEndian);
+    },
 
-Mad.ArrayBuffers.SubStream.prototype.seek = function(n) {
-    this.state['offset'] += n;
-}
+    absoluteAvailable: function(n) {
+        return this.parentStream.absoluteAvailable(this.start + n);
+    },
 
-Mad.ArrayBuffers.SubStream.prototype.read = function(n) {
-    var result = this.peek(n);
-    
-    this.seek(n);
-    
-    return result;
-}
+    seek: function(n) {
+        this.offset += n;
+    },
 
-Mad.ArrayBuffers.SubStream.prototype.peek = function(n) {
-    return this.get(this.state['offset'], n);
-}
+    read: function(n) {
+        var result = this.peek(n);
+        
+        this.seek(n);
+        
+        return result;
+    },
 
-Mad.ArrayBuffers.SubStream.prototype.get = function(offset, length) {
-    return this.parentStream.get(this.state['start'] + offset, length);
-}
+    peek: function(n) {
+        return this.get(this.offset, n);
+    },
 
-Mad.ArrayBuffers.SubStream.prototype.slice = function(start, end) {
-    return this.parentStream.get(this.state['start'] + start, end - start);
-}
+    get: function(offset, length) {
+        return this.parentStream.get(this.start + offset, length);
+    },
 
-Mad.ArrayBuffers.SubStream.prototype.requestAbsolute = function(n, callback) {
-    this.parentStream.requestAbsolute(this.state['start'] + n)
-}
+    slice: function(start, end) {
+        return this.parentStream.get(this.start + start, end - start);
+    },
 
-Mad.ArrayBuffers.SubStream.prototype.request = function(n, callback) {
-    this.parentStream.requestAbsolute(this.state['start'] + this.state['offset'] + n)
-}
+    requestAbsolute: function(n, callback) {
+        this.parentStream.requestAbsolute(this.start + n)
+    },
+
+    request: function(n, callback) {
+        this.parentStream.requestAbsolute(this.start + this.offset + n)
+    }
+});

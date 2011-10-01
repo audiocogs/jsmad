@@ -1,7 +1,7 @@
 Mad.BinaryStrings.ByteStream = function(url) { }
 
 Mad.BinaryStrings.ByteStream.prototype.available = function(n) {
-    return this.absoluteAvailable(this.state.offset + n);
+    return this.absoluteAvailable(this.offset + n);
 }
 
 Mad.BinaryStrings.ByteStream.prototype.strEquals = function (offset, string) {
@@ -65,35 +65,35 @@ Mad.BinaryStrings.ByteStream.prototype.getSyncInteger = function(offset) {
 }
 
 Mad.BinaryStrings.ByteStream.prototype.peekU8 = function(bigEndian) {
-    return this.getU8(this.state.offset, bigEndian);
+    return this.getU8(this.offset, bigEndian);
 }
 
 Mad.BinaryStrings.ByteStream.prototype.peekU16 = function(bigEndian) {
-    return this.getU16(this.state.offset, bigEndian);
+    return this.getU16(this.offset, bigEndian);
 }
 
 Mad.BinaryStrings.ByteStream.prototype.peekU24 = function(bigEndian) {
-    return this.getU24(this.state.offset, bigEndian);
+    return this.getU24(this.offset, bigEndian);
 }
 
 Mad.BinaryStrings.ByteStream.prototype.peekU32 = function(bigEndian) {
-    return this.getU32(this.state.offset, bigEndian);
+    return this.getU32(this.offset, bigEndian);
 }
 
 Mad.BinaryStrings.ByteStream.prototype.peekI8 = function(bigEndian) {
-    return this.getI8(this.state.offset, bigEndian);
+    return this.getI8(this.offset, bigEndian);
 }
 
 Mad.BinaryStrings.ByteStream.prototype.peekI16 = function(bigEndian) {
-    return this.getI16(this.state.offset, bigEndian);
+    return this.getI16(this.offset, bigEndian);
 }
 
 Mad.BinaryStrings.ByteStream.prototype.peekI32 = function(bigEndian) {
-    return this.getI32(this.state.offset, bigEndian);
+    return this.getI32(this.offset, bigEndian);
 }
 
 Mad.BinaryStrings.ByteStream.prototype.peekSyncInteger = function() {
-    return this.getSyncInteger(this.state.offset);
+    return this.getSyncInteger(this.offset);
 }
 
 Mad.BinaryStrings.ByteStream.prototype.readU8 = function(bigEndian) {
@@ -153,7 +153,7 @@ Mad.BinaryStrings.ByteStream.prototype.readI32 = function(bigEndian) {
 }
 
 Mad.BinaryStrings.ByteStream.prototype.readSyncInteger = function() {
-    var result = this.getSyncInteger(this.state.offset);
+    var result = this.getSyncInteger(this.offset);
     
     this.seek(4);
     

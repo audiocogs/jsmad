@@ -15,13 +15,15 @@ var domReady = function ()
             var mpeg = mp3.getMpegStream();
           
             var howmuch = 1000; 
+            var ss1 = Date.now();
             console.log("Decoding first " + howmuch + " frames"); 
             var frame = new Mad.Frame();
 
             for(var i = 0; i < howmuch; i += 1) {
                 frame = Mad.Frame.decode(frame, mpeg);
             }
-            console.log("Done!");
+            var ss2 = Date.now();
+            console.log("Done in " + (ss2 - ss1) + "ms");
         });
     }
 };

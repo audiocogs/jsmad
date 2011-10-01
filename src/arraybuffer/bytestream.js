@@ -1,7 +1,7 @@
 
 Mad.ArrayBuffers.ByteStream = Class.extend({
     available: function(n) {
-        return this.absoluteAvailable(this.state.offset + n);
+        return this.absoluteAvailable(this.offset + n);
     },
 
     strEquals: function (offset, string) {
@@ -59,35 +59,35 @@ Mad.ArrayBuffers.ByteStream = Class.extend({
     },
 
     peekU8: function(bigEndian) {
-        return this.getU8(this.state.offset, bigEndian);
+        return this.getU8(this.offset, bigEndian);
     },
 
     peekU16: function(bigEndian) {
-        return this.getU16(this.state.offset, bigEndian);
+        return this.getU16(this.offset, bigEndian);
     },
 
     peekU24: function(bigEndian) {
-        return this.getU24(this.state.offset, bigEndian);
+        return this.getU24(this.offset, bigEndian);
     },
 
     peekU32: function(bigEndian) {
-        return this.getU32(this.state.offset, bigEndian);
+        return this.getU32(this.offset, bigEndian);
     },
 
     peekI8: function(bigEndian) {
-        return this.getI8(this.state.offset, bigEndian);
+        return this.getI8(this.offset, bigEndian);
     },
 
     peekI16: function(bigEndian) {
-        return this.getI16(this.state.offset, bigEndian);
+        return this.getI16(this.offset, bigEndian);
     },
 
     peekI32: function(bigEndian) {
-        return this.getI32(this.state.offset, bigEndian);
+        return this.getI32(this.offset, bigEndian);
     },
 
     peekSyncInteger: function() {
-        return this.getSyncInteger(this.state.offset);
+        return this.getSyncInteger(this.offset);
     },
 
     readU8: function(bigEndian) {
@@ -133,7 +133,7 @@ Mad.ArrayBuffers.ByteStream = Class.extend({
     },
 
     readSyncInteger: function() {
-        var result = this.getSyncInteger(this.state.offset);
+        var result = this.getSyncInteger(this.offset);
         this.seek(4);
         return result;
     }

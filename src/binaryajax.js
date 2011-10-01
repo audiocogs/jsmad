@@ -137,7 +137,7 @@ var BinaryAjax = (function() {
 						oHTTP = null;
 					};
 				} else {
-					oHTTP.onreadystatechange = function() {
+					oHTTP.onreadchange = function() {
 						if (oHTTP.readyState == 4) {
 							if (oHTTP.status == "200") {
 								fncCallback(this);
@@ -182,7 +182,7 @@ var BinaryAjax = (function() {
 						oHTTP = null;
 					};
 				} else {
-					oHTTP.onreadystatechange = function() {
+					oHTTP.onreadchange = function() {
 						if (oHTTP.readyState == 4) {
 							if (oHTTP.status == "200" || oHTTP.status == "206" || oHTTP.status == "0") {
 								// IE6 craps if we try to extend the XHR object
