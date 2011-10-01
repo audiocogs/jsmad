@@ -254,12 +254,14 @@ Mad.MASK1BIT = function (cache, sz) {
     return ((cache) & (1 << ((sz) - 1)));
 }
 
+var mad_III_huffdecode_exponents = new Int32Array(4 * 39);
+
 /*
  * NAME:    III_huffdecode()
  * DESCRIPTION: decode Huffman code words of one channel of one granule
  */
 Mad.III_huffdecode = function(ptr, xr /* Float64Array(576) */, channel, sfbwidth, part2_length) {
-    var exponents = new Int32Array(new ArrayBuffer(4 * 39));
+    var exponents = mad_III_huffdecode_exponents;
     var expptr = 0;
     var bits_left, cachesz;
     var xrptr;
