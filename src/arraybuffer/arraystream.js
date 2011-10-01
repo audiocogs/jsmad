@@ -1,33 +1,11 @@
 
-Mad.ArrayBuffers.FileStream = Mad.ArrayBuffers.ByteStream.extend({
-    init: function (file, callback) {
+Mad.ArrayBuffers.ArrayStream = Mad.ArrayBuffers.ByteStream.extend({
+    init: function (buffer) {
         this.offset        = 0;
-
-        // Check for the various File API support.
-        if (window.File && window.FileReader && window.FileList && window.Blob) {
-            // Great success! All the File APIs are supported.
-        } else {
-            alert('The File APIs are not fully supported in this browser.');
-            return null;
-        } 
-        
-        var self = this;
-        var reader = new FileReader();
-        reader.onload = function () {
-          self.buffer        = new Uint8Array(reader.result);
-          self.amountRead    = self.buffer.length;
-          self.contentLength = self.buffer.length;
-          self.length = self.amountRead;
-          
-          callback(self);
-        }
-        
-        reader.onerror = function () {
-            console.log("Error loading file " + file);
-        }
-
-        // Only supported from Firefox 7 and Chrome 'Something'
-        reader.readAsArrayBuffer(file);
+        this.buffer        = buffer;
+        this.amountRead    = this.buffer.length;
+        this.contentLength = this.buffer.length;
+        this.length = this.amountRead;
     },
 
     substream: function (offset, length) {

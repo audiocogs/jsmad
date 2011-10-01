@@ -20,9 +20,15 @@ if (!Mad.enforceBinaryString && typeof(ArrayBuffer) === 'function' && typeof(Uin
             return new Uint8Array(length);
         },
 
-        memcpy: function (dst, dstOffset, src, srcOffset, length) {
+        memcpy: function (dst, dstOffset, pSrc, srcOffset, length) {
+            while (pSrc.parentStream) {
+                srcOffset += pSrc.start;
+                pSrc = pSrc.parentStream;
+            }
+            var src = pSrc.buffer;
+
             // oh my, memcpy actually exists in JavaScript?
-            dst.set(src.subarray(srcOffset), dstOffset);
+            dst.set(src.subarray(srcOffset, length), dstOffset);
             return dst;
         }
     };
