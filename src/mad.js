@@ -21,14 +21,16 @@ if (!Mad.enforceBinaryString && typeof(ArrayBuffer) === 'function' && typeof(Uin
         },
 
         memcpy: function (dst, dstOffset, pSrc, srcOffset, length) {
+            console.log("memcpy(dst, " + dstOffset + ", pSrc, " + srcOffset + ", " + length + ")");
             while (pSrc.parentStream) {
                 srcOffset += pSrc.start;
                 pSrc = pSrc.parentStream;
             }
             var src = pSrc.buffer;
+            var subarr = src.subarray(srcOffset, srcOffset + length);
 
             // oh my, memcpy actually exists in JavaScript?
-            dst.set(src.subarray(srcOffset, length), dstOffset);
+            dst.set(subarr, dstOffset);
             return dst;
         }
     };
@@ -45,6 +47,7 @@ if (!Mad.enforceBinaryString && typeof(ArrayBuffer) === 'function' && typeof(Uin
         },
 
         memcpy: function (dst, dstOffset, src, srcOffset, length) {
+            console.log("memcpy(dst, " + dstOffset + ", pSrc, " + srcOffset + ", " + length + ")");
             // this is a pretty weird memcpy actually - it constructs a new version of dst, because we have no other way to do it
             return dst.slice(0, dstOffset) + src.slice(srcOffset, srcOffset + length) + dst.slice(dstOffset + length);
         }

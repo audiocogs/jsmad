@@ -7,7 +7,7 @@ var CHAR_BIT = 8;
  * DESCRIPTION: initialize bit pointer struct
  */
 Mad.Bit = function (stream, offset) {
-    if (stream instanceof String) {
+    if (typeof(stream) === 'string') {
         this.stream = new Mad.BinaryStrings.StringStream(stream);
     } else if(stream instanceof Uint8Array) {
         this.stream = new Mad.ArrayBuffers.ArrayStream(stream);

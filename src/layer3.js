@@ -315,7 +315,7 @@ Mad.III_huffdecode = function(ptr, xr /* Float64Array(576) */, channel, sfbwidth
             var clumpsz, value;
             var requantized;
 
-            //console.log("big_values = " + big_values + ", cachesz = " + cachesz + ", bits_left = " + bits_left);
+            console.log("big_values = " + big_values + ", cachesz = " + cachesz + ", bits_left = " + bits_left);
 
             if (xrptr == sfbound) {
                 sfbound += sfbwidth[sfbwidthptr++];
@@ -347,16 +347,20 @@ Mad.III_huffdecode = function(ptr, xr /* Float64Array(576) */, channel, sfbwidth
 
             if (cachesz < 21) {
                 var bits       = ((32 - 1 - 21) + (21 - cachesz)) & ~7;
-                bitcache   = (bitcache << bits) | peek.read(bits);
+                var bitsread   = peek.read(bits);
+                console.log("bits = " + bits + ", bitsread = " + bitsread);
+                bitcache   = (bitcache << bits) | bitsread;
                 cachesz   += bits;
                 bits_left -= bits;
             }
 
             /* hcod (0..19) */
             clumpsz = startbits;
+            console.log('getting pair, bitcache = ' + bitcache + ", cachesz = " + cachesz + ", clumpsz = " + clumpsz);
             pair    = table[ (((bitcache) >> ((cachesz) - (clumpsz))) & ((1 << (clumpsz)) - 1))];
             
             while (!pair['final']) {
+                console.log('pair ' + JSON.stringify(pair) + ' is not final, cachesz = ' + cachesz + ' being subtracted clumpsz ' + clumpsz);
                 cachesz -= clumpsz;
 
                 clumpsz = pair.ptr.bits;
@@ -479,12 +483,12 @@ Mad.III_huffdecode = function(ptr, xr /* Float64Array(576) */, channel, sfbwidth
             }
 
             xrptr += 2;
-            //console.log("big_values = " + big_values + ", cachesz = " + cachesz +
-            //  ", bits_left = " + bits_left + ", xrptr = " + xrptr);
+            console.log("big_values = " + big_values + ", cachesz = " + cachesz +
+              ", bits_left = " + bits_left + ", xrptr = " + xrptr);
         }
     }
 
-    //console.log("bits_left (before big_values overrun) = " + bits_left);
+    console.log("bits_left (before big_values overrun) = " + bits_left + ", cachesz = " + cachesz);
 
     if (cachesz + bits_left < 0)
         return Mad.Error.BADHUFFDATA;  /* big_values overrun */
@@ -1326,6 +1330,7 @@ Mad.layer_III = function (stream, frame) {
                 frame_used = md_len - si.main_data_begin;
                 
                 /* memcpy(dst, dstOffset, src, srcOffset, length) - returns a copy of dst with modified bytes */
+                console.log("mem copy 1");
                 stream.main_data = Mad.Storage.memcpy(stream.main_data, stream.md_len, stream.ptr.stream, stream.ptr.nextbyte(), frame_used);
 
                 /*
@@ -1337,8 +1342,14 @@ Mad.layer_III = function (stream, frame) {
                 */
                 stream.md_len += frame_used;
             }
-            
+           
             ptr = new Mad.Bit(stream.main_data, old_md_len - si.main_data_begin);
+
+            console.log("main_data length = " + stream.main_data.length + ", old_md_len = " + old_md_len + ", main_data_begin = " + si.main_data_begin + " new ptr = ");
+            console.log(ptr);
+            if(ptr.stream.amountRead === 2567) {
+                console.log("OH MY IT'S 2567");
+            }
         }
     }
 
@@ -1370,6 +1381,7 @@ Mad.layer_III = function (stream, frame) {
 
     /* preload main_data buffer with up to 511 bytes for next frame(s) */
     if (frame_free >= next_md_begin) {
+        console.log("mem copy 2");
         stream.main_data = Mad.Storage.memcpy(stream.main_data, 0, stream.stream, stream.next_frame - next_md_begin, next_md_begin);
         /*
         // Keeping here for reference
@@ -1383,6 +1395,7 @@ Mad.layer_III = function (stream, frame) {
                 extra = next_md_begin - frame_free;
 
             if (extra < stream.md_len) {
+                console.log("mem copy 3");
                 stream.main_data = Mad.Storage.memcpy(stream.main_data, 0, stream.main_data, stream.md_len - extra, extra);
                 /*
                 // Keeping here for reference
@@ -1394,6 +1407,7 @@ Mad.layer_III = function (stream, frame) {
             stream.md_len = 0;
         }
 
+        console.log("mem copy 4");
         stream.main_data = Mad.Storage.memcpy(stream.main_data, stream.md_len, stream.stream, stream.next_frame - frame_free, frame_free);
         /*
         // Keeping here for reference

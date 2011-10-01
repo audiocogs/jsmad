@@ -14,12 +14,13 @@ var domReady = function ()
             console.log("File loaded");
             var mpeg = mp3.getMpegStream();
           
-            var howmuch = 1000; 
+            var howmuch = 40; 
             var ss1 = Date.now();
             console.log("Decoding first " + howmuch + " frames"); 
             var frame = new Mad.Frame();
 
             for(var i = 0; i < howmuch; i += 1) {
+                console.log("Decoding frame " + i); 
                 frame = Mad.Frame.decode(frame, mpeg);
             }
             var ss2 = Date.now();
