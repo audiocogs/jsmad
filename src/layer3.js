@@ -359,7 +359,7 @@ Mad.III_huffdecode = function(ptr, xr /* Float64Array(576) */, channel, sfbwidth
             //console.log('getting pair, bitcache = ' + bitcache + ", cachesz = " + cachesz + ", clumpsz = " + clumpsz);
             pair    = table[ (((bitcache) >> ((cachesz) - (clumpsz))) & ((1 << (clumpsz)) - 1))];
             
-            while (!pair['final']) {
+            while (!pair.final) {
                 //console.log('pair ' + JSON.stringify(pair) + ' is not final, cachesz = ' + cachesz + ' being subtracted clumpsz ' + clumpsz);
                 cachesz -= clumpsz;
 
