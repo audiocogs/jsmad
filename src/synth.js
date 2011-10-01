@@ -126,7 +126,7 @@ Mad.Synth.dct32 = function (_in /* [32] */, slot, lo /* [16][8] */, hi /* [16][8
     // var sys = require('sys');
     // for (i = 0; i < 32; i++) {
     //     sys.print(_in[i].toFixed(8) + "\t");
-    //     if (i % 8 == 7) sys.print("\n");
+    //     if (i % 8 === 7) sys.print("\n");
     // }
 
     t0   = _in[0]  + _in[31];  t16  = ((_in[0]  - _in[31]) * (costab1));
@@ -1071,7 +1071,7 @@ Mad.Synth.prototype.full = function(frame, nch, ns) {
                 ++fePtr;
                 ++Dptr;
 
-                /* D[32 - sb][i] == -D[sb][31 - i] */
+                /* D[32 - sb][i] === -D[sb][31 - i] */
 
                 ptr = D[Dptr];
                 _fo = fo[foPtr];
@@ -1211,7 +1211,7 @@ Mad.Synth.prototype.full = function(frame, nch, ns) {
 //  ++fe;
 //  ++Dptr;
 //
-//  /* D[32 - sb][i] == -D[sb][31 - i] */
+//  /* D[32 - sb][i] === -D[sb][31 - i] */
 //
 //  if (!(sb & 1)) {
 //    ptr = *Dptr + po;

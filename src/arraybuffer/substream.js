@@ -30,15 +30,13 @@ Mad.ArrayBuffers.SubStream = Mad.ArrayBuffers.ByteStream.extend({
     seek: function(n) {
         this.offset += n;
     },
-
+ 
     read: function(n) {
         var result = this.peek(n);
-        
         this.seek(n);
-        
         return result;
     },
-
+               
     peek: function(n) {
         return this.get(this.offset, n);
     },

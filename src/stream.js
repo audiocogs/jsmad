@@ -96,7 +96,7 @@ Mad.Stream.prototype.doSync = function() {
     var ptr = this.ptr.nextbyte();
     var end = this.bufend;
 
-    while (ptr < end - 1 && !(this.getU8(ptr) == 0xff && (this.getU8(ptr + 1) & 0xe0) == 0xe0)) {
+    while (ptr < end - 1 && !(this.getU8(ptr) === 0xff && (this.getU8(ptr + 1) & 0xe0) === 0xe0)) {
         ++ptr;
     }
 

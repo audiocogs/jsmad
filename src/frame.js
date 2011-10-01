@@ -62,12 +62,12 @@ Mad.Header = function () {
 };
 
 Mad.Header.prototype.nchannels = function () {
-    return this.mode == 0 ? 1 : 2;
+    return this.mode === 0 ? 1 : 2;
 }
 
 Mad.Header.prototype.nbsamples = function() {
-    return (this.layer == Mad.Layer.I ? 12 : 
-        ((this.layer == Mad.Layer.III && (this.flags & Mad.Flag.LSF_EXT)) ? 18 : 36));
+    return (this.layer === Mad.Layer.I ? 12 : 
+        ((this.layer === Mad.Layer.III && (this.flags & Mad.Flag.LSF_EXT)) ? 18 : 36));
 }
 
 /* libmad's decode_header */
@@ -83,12 +83,12 @@ Mad.Header.actually_decode = function(stream) {
     stream.ptr.skip(11);
     
     /* MPEG 2.5 indicator (really part of syncword) */
-    if (stream.ptr.read(1) == 0) {
+    if (stream.ptr.read(1) === 0) {
         header.flags |= Mad.Flag.MPEG_2_5_EXT;
     }
 
     /* ID */
-    if (stream.ptr.read(1) == 0) {
+    if (stream.ptr.read(1) === 0) {
         header.flags |= Mad.Flag.LSF_EXT;
     } else if (header.flags & Mad.Flag.MPEG_2_5_EXT) {
         stream.error = Mad.Error.LOSTSYNC;
@@ -98,13 +98,13 @@ Mad.Header.actually_decode = function(stream) {
     /* layer */
     header.layer = 4 - stream.ptr.read(2);
 
-    if (header.layer == 4) {
+    if (header.layer === 4) {
         stream.error = Mad.Error.BADLAYER;
         return header;
     }
 
     /* protection_bit */
-    if (stream.ptr.read(1) == 0) {
+    if (stream.ptr.read(1) === 0) {
         header.flags    |= Mad.Flag.PROTECTION;
         // TODO: crc
         //header.crc_check = mad_bit_crc(stream.ptr, 16, 0xffff);
@@ -113,7 +113,7 @@ Mad.Header.actually_decode = function(stream) {
 
     /* bitrate_index */
     var index = stream.ptr.read(4);
-    if (index == 15) {
+    if (index === 15) {
         stream.error = Mad.Error.BADBITRATE;
         return header;
     }
@@ -127,7 +127,7 @@ Mad.Header.actually_decode = function(stream) {
     /* sampling_frequency */
     index = stream.ptr.read(2);
 
-    if (index == 3) {
+    if (index === 3) {
         stream.error = Mad.Error.BADSAMPLERATE;
         return header;
     }
@@ -218,7 +218,7 @@ Mad.Header.decode = function(stream) {
 
                     stream.error = Mad.Error.BUFLEN;
                     return null;
-                } else if (!(stream.getU8(ptr) == 0xff && (stream.getU8(ptr + 1) & 0xe0) == 0xe0)) {
+                } else if (!(stream.getU8(ptr) === 0xff && (stream.getU8(ptr + 1) & 0xe0) === 0xe0)) {
                     /* mark point where frame sync word was expected */
                     stream.this_frame = ptr;
                     stream.next_frame = ptr + 1;
@@ -229,7 +229,7 @@ Mad.Header.decode = function(stream) {
             } else {
                 stream.ptr = new Mad.Bit(stream.stream, ptr);
 
-                if (stream.doSync() == -1) {
+                if (stream.doSync() === -1) {
                     if (end - stream.next_frame >= Mad.BUFFER_GUARD)
                         stream.next_frame = end - Mad.BUFFER_GUARD;
                     stream.error = Mad.Error.BUFLEN;
@@ -253,9 +253,9 @@ Mad.Header.decode = function(stream) {
         stream.ptr = new Mad.Bit(stream.stream, stream.this_frame);
         
         header = Mad.Header.actually_decode(stream);
-        if(header == null) return null; // well Duh^2
+        if(header === null) return null; // well Duh^2
 
-        //console.log("============= Decoding layer " + header.layer + " audio mode " +
+        //console.log("=============== Decoding layer " + header.layer + " audio mode " +
         //     header.mode + " with " + header.bitrate +
         //     " bps and a samplerate of " + header.samplerate);
 
@@ -263,14 +263,14 @@ Mad.Header.decode = function(stream) {
         //mad_timer_set(&header.duration, 0, 32 * MAD_NSBSAMPLES(header), header.samplerate);
 
         /* calculate free bit rate */
-        if (header.bitrate == 0) {
+        if (header.bitrate === 0) {
             console.log("Uh oh, a free bitrate stream. We're fucked.");
             stream.error = Mad.Error.BADDATAPTR; // best guess
             return null;
             
-    //        if ((stream.freerate == 0 || !stream.sync ||
-    //                        (header.layer == Mad.Layer.III && stream.freerate > 640000)) &&
-    //                free_bitrate(stream, header) == -1)
+    //        if ((stream.freerate === 0 || !stream.sync ||
+    //                        (header.layer === Mad.Layer.III && stream.freerate > 640000)) &&
+    //                free_bitrate(stream, header) === -1)
     //            return null;
     //
     //        header.bitrate = stream.freerate;
@@ -280,10 +280,10 @@ Mad.Header.decode = function(stream) {
         /* calculate beginning of next frame */
         pad_slot = (header.flags & Mad.Flag.PADDING) ? 1 : 0;
 
-        if (header.layer == Mad.Layer.I) {
+        if (header.layer === Mad.Layer.I) {
             N = (((12 * header.bitrate / header.samplerate) << 0) + pad_slot) * 4;
         } else {
-            var slots_per_frame = (header.layer == Mad.Layer.III &&
+            var slots_per_frame = (header.layer === Mad.Layer.III &&
                    (header.flags & Mad.Flag.LSF_EXT)) ? 72 : 144;
             //console.log("slots_per_frame = " + slots_per_frame + ", bitrate = " + header.bitrate + ", samplerate = " + header.samplerate);
 
@@ -306,7 +306,7 @@ Mad.Header.decode = function(stream) {
         if (!stream.sync) {
             /* check that a valid frame header follows this frame */
             ptr = stream.next_frame;
-            if (!(stream.getU8(ptr) == 0xff && (stream.getU8(ptr + 1) & 0xe0) == 0xe0)) {
+            if (!(stream.getU8(ptr) === 0xff && (stream.getU8(ptr + 1) & 0xe0) === 0xe0)) {
                 ptr = stream.next_frame = stream.this_frame + 1;
           
                 // emulating 'goto sync'
@@ -361,7 +361,7 @@ Mad.Frame.decode = function(frame, stream) {
 
     if (!(frame.header.flags & Mad.Flag.INCOMPLETE)) {
         frame.header = Mad.Header.decode(stream);
-        if(frame.header == null) {
+        if(frame.header === null) {
             // something went wrong
             throw 'Header decoding failed';
         }
@@ -369,7 +369,7 @@ Mad.Frame.decode = function(frame, stream) {
 
     frame.header.flags &= ~Mad.Flag.INCOMPLETE;
 
-    if (decoder_table[frame.header.layer - 1](stream, frame) == -1) {
+    if (decoder_table[frame.header.layer - 1](stream, frame) === -1) {
         if (!Mad.recoverable(stream.error)) {
             stream.next_frame = stream.this_frame;
         }

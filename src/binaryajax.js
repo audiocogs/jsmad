@@ -15,7 +15,7 @@ var BinaryFile = function(strData, iDataOffset, iDataLength) {
 		return data;
 	}
 
-	if (typeof strData == "string") {
+	if (typeof strData === "string") {
 		dataLength = iDataLength || data.length;
 
 		this.getByteAt = function(iOffset) {
@@ -31,7 +31,7 @@ var BinaryFile = function(strData, iDataOffset, iDataLength) {
 			
 			return aBytes;
 		}
-	} else if (typeof strData == "unknown") {
+	} else if (typeof strData === "unknown") {
 		dataLength = iDataLength || IEBinary_getLength(data);
 
 		this.getByteAt = function(iOffset) {
@@ -129,7 +129,7 @@ var BinaryAjax = (function() {
 			if (fncCallback) {
 				if (typeof(oHTTP.onload) != "undefined") {
 					oHTTP.onload = function() {
-						if (oHTTP.status == "200") {
+						if (oHTTP.status === "200") {
 							fncCallback(this);
 						} else {
 							if (fncError) fncError();
@@ -138,8 +138,8 @@ var BinaryAjax = (function() {
 					};
 				} else {
 					oHTTP.onreadchange = function() {
-						if (oHTTP.readyState == 4) {
-							if (oHTTP.status == "200") {
+						if (oHTTP.readyState === 4) {
+							if (oHTTP.status === "200") {
 								fncCallback(this);
 							} else {
 								if (fncError) fncError();
@@ -172,7 +172,7 @@ var BinaryAjax = (function() {
 			if (fncCallback) {
 				if (typeof(oHTTP.onload) != "undefined") {
 					oHTTP.onload = function() {
-						if (oHTTP.status == "200" || oHTTP.status == "206" || oHTTP.status == "0") {
+						if (oHTTP.status === "200" || oHTTP.status === "206" || oHTTP.status === "0") {
 							oHTTP.binaryResponse = new BinaryFile(oHTTP.responseText, iDataOffset, iDataLen);
 							oHTTP.fileSize = iFileSize || oHTTP.getResponseHeader("Content-Length");
 							fncCallback(oHTTP);
@@ -183,14 +183,14 @@ var BinaryAjax = (function() {
 					};
 				} else {
 					oHTTP.onreadchange = function() {
-						if (oHTTP.readyState == 4) {
-							if (oHTTP.status == "200" || oHTTP.status == "206" || oHTTP.status == "0") {
+						if (oHTTP.readyState === 4) {
+							if (oHTTP.status === "200" || oHTTP.status === "206" || oHTTP.status === "0") {
 								// IE6 craps if we try to extend the XHR object
 								var oRes = {
 									status : oHTTP.status,
 									// IE needs responseBody, Chrome/Safari needs responseText
 									binaryResponse : new BinaryFile(
-										typeof oHTTP.responseBody == "unknown" ? oHTTP.responseBody : oHTTP.responseText, iDataOffset, iDataLen
+										typeof oHTTP.responseBody === "unknown" ? oHTTP.responseBody : oHTTP.responseText, iDataOffset, iDataLen
 									),
 									fileSize : iFileSize || oHTTP.getResponseHeader("Content-Length")
 								};
@@ -234,7 +234,7 @@ var BinaryAjax = (function() {
 						iStart += iLength;
 					iEnd = iStart + aRange[1] - 1;
 
-					sendRequest(strURL, fncCallback, fncError, [iStart, iEnd], (strAcceptRanges == "bytes"), iLength);
+					sendRequest(strURL, fncCallback, fncError, [iStart, iEnd], (strAcceptRanges === "bytes"), iLength);
 				}
 			);
 

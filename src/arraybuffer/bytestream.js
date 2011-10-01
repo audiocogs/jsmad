@@ -136,5 +136,14 @@ Mad.ArrayBuffers.ByteStream = Class.extend({
         var result = this.getSyncInteger(this.offset);
         this.seek(4);
         return result;
+    },
+
+    readAsString: function(n) {
+        var arr = this.read(n);
+        var str = "";
+        for (var i = 0; i < n; i++) {
+            str += String.fromCharCode(arr[i]);
+        }
+        return str;
     }
 });

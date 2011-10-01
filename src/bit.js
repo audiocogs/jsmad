@@ -43,7 +43,7 @@ Mad.Bit.prototype.length = function(end) {
  * DESCRIPTION: return pointer to next unprocessed byte
  */
 Mad.Bit.prototype.nextbyte = function() {
-    return this.left == CHAR_BIT ? this.offset : this.offset + 1;
+    return this.left === CHAR_BIT ? this.offset : this.offset + 1;
 }
 
 /*
@@ -75,7 +75,7 @@ Mad.Bit.prototype.read = function(len) {
     
     var value = 0;
 
-    if (this.left == CHAR_BIT) {
+    if (this.left === CHAR_BIT) {
         this.cache = this.stream.getU8(this.offset);
     }
 
@@ -112,7 +112,7 @@ Mad.Bit.prototype.read = function(len) {
 Mad.Bit.prototype.readBig = function(len) {
     var value = 0;
     
-    if (this.left == CHAR_BIT) {
+    if (this.left === CHAR_BIT) {
         this.cache = this.stream.getU8(this.offset);
     }
     

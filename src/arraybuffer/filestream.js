@@ -48,9 +48,7 @@ Mad.ArrayBuffers.FileStream = Mad.ArrayBuffers.ByteStream.extend({
 
     read: function(n) {
         var result = this.peek(n);
-        
         this.seek(n);
-        
         return result;
     },
 

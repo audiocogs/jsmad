@@ -9,7 +9,7 @@ var stringToEncoding = function(string, encoding) {
         case 1:
             var ix = 2, offset1 = 1, offset2 = 0;
             
-            if (string.slice(0, 2) == "\xFE\xFF") {
+            if (string.slice(0, 2) === "\xFE\xFF") {
                 offset1 = 0, offset2 = 1;
             } else {
                 offset1 = 1, offset2 = 0;
@@ -272,7 +272,7 @@ Mad.ID3v22Stream.prototype.readFrame = function() {
     
     var identifier = this.stream.read(3);
     
-    if (identifier.charCodeAt(0) == 0) {
+    if (identifier.charCodeAt(0) === 0) {
         this.offset = this.header.length + 1;
         
         return null;

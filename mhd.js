@@ -59,7 +59,7 @@
         {
             this.bindEvents();
             this.checkLocation();
-            this.playOfm();
+            //this.playOfm();
         },
         
         onPlayPause : function()

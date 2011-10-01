@@ -17,7 +17,7 @@ Mad.BinaryStrings.AjaxStream = function(url) {
     
     var ochange = function () {
         iteration += 1;
-        if ((self.callbacks.length > 0 && iteration % 64 == 0) || iteration % 256 == 0) {
+        if ((self.callbacks.length > 0 && iteration % 64 === 0) || iteration % 256 === 0) {
             self.updateBuffer();
             
             var newCallbacks = [];
@@ -39,7 +39,7 @@ Mad.BinaryStrings.AjaxStream = function(url) {
             self.callbacks = newCallbacks;
         }
         
-        if (request.readyState == 4) {
+        if (request.readyState === 4) {
 			self.amountRead = self.contentLength;
             for (var i = 0; i < self.callbacks.length; i++) {
                 var callback = self.callbacks[i];

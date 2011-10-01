@@ -243,7 +243,7 @@ Mad.Channel = function() {
 }
 
 
-/* we must take care that sz >= bits and sz < sizeof(long) lest bits == 0 */
+/* we must take care that sz >= bits and sz < sizeof(long) lest bits === 0 */
 Mad.MASK = function (cache, sz, bits) {
     // return Mad.bitwiseAnd(Mad.rshift(cache, sz - bits), Mad.lshift(1, bits) - 1);
     return (((cache) >> ((sz) - (bits))) & ((1 << (bits)) - 1));
@@ -304,7 +304,7 @@ Mad.III_huffdecode = function(ptr, xr /* Float64Array(576) */, channel, sfbwidth
         var linbits   = entry.linbits;
         var startbits = entry.startbits;
 
-        if (typeof(table) == 'undefined')
+        if (typeof(table) === 'undefined')
             return Mad.Error.BADHUFFTABLE;
 
         expptr = 0;
@@ -319,12 +319,12 @@ Mad.III_huffdecode = function(ptr, xr /* Float64Array(576) */, channel, sfbwidth
 
             //console.log("big_values = " + big_values + ", cachesz = " + cachesz + ", bits_left = " + bits_left);
 
-            if (xrptr == sfbound) {
+            if (xrptr === sfbound) {
                 sfbound += sfbwidth[sfbwidthptr++];
 
                 /* change table if region boundary */
-                if (--rcount == 0) {
-                    if (region == 0)
+                if (--rcount === 0) {
+                    if (region === 0)
                         rcount = channel.region1_count + 1;
                     else
                         rcount = 0;  /* all remaining */
@@ -334,7 +334,7 @@ Mad.III_huffdecode = function(ptr, xr /* Float64Array(576) */, channel, sfbwidth
                     linbits   = entry.linbits;
                     startbits = entry.startbits;
 
-                    if (typeof(table) == 'undefined')
+                    if (typeof(table) === 'undefined')
                         return Mad.Error.BADHUFFTABLE;
                 }
 
@@ -450,7 +450,7 @@ Mad.III_huffdecode = function(ptr, xr /* Float64Array(576) */, channel, sfbwidth
                 /* x (0..1) */
                 value = pair.value.x;
 
-                if (value == 0) {
+                if (value === 0) {
                     xr[xrptr] = 0;
                 } else {
                     if (reqhits & (1 << value))
@@ -467,7 +467,7 @@ Mad.III_huffdecode = function(ptr, xr /* Float64Array(576) */, channel, sfbwidth
                 /* y (0..1) */
                 value = pair.value.y;
 
-                if (value == 0)
+                if (value === 0)
                     xr[xrptr + 1] = 0;
                 else {
                     if (reqhits & (1 << value))
@@ -517,7 +517,7 @@ Mad.III_huffdecode = function(ptr, xr /* Float64Array(576) */, channel, sfbwidth
 
             cachesz -= quad.value.hlen;
 
-            if (xrptr == sfbound) {
+            if (xrptr === sfbound) {
                 sfbound += sfbwidth[sfbwidthptr++];
 
                 if (exp != exponents[expptr]) {
@@ -538,7 +538,7 @@ Mad.III_huffdecode = function(ptr, xr /* Float64Array(576) */, channel, sfbwidth
 
             xrptr += 2;
 
-            if (xrptr == sfbound) {
+            if (xrptr === sfbound) {
                 sfbound += sfbwidth[sfbwidthptr++];
 
                 if (exp != exponents[expptr]) {
@@ -616,7 +616,7 @@ Mad.III_sideinfo = function (ptr, nch, lsf) {
     var result = Mad.Error.NONE;
 
     var data_bitlen = 0;
-    var priv_bitlen = lsf ? ((nch == 1) ? 1 : 2) : ((nch == 1) ? 5 : 3);
+    var priv_bitlen = lsf ? ((nch === 1) ? 1 : 2) : ((nch === 1) ? 5 : 3);
     
     si.main_data_begin = ptr.read(lsf ? 8 : 9);
     si.private_bits    = ptr.read(priv_bitlen);
@@ -644,7 +644,7 @@ Mad.III_sideinfo = function (ptr, nch, lsf) {
 
             data_bitlen += channel.part2_3_length;
 
-            if (channel.big_values > 288 && result == 0)
+            if (channel.big_values > 288 && result === 0)
                 result = Mad.Error.BADBIGVALUES;
 
             channel.flags = 0;
@@ -653,10 +653,10 @@ Mad.III_sideinfo = function (ptr, nch, lsf) {
             if (ptr.read(1)) {
                 channel.block_type = ptr.read(2);
 
-                if (channel.block_type == 0 && result == 0)
+                if (channel.block_type === 0 && result === 0)
                     result = Mad.Error.BADBLOCKTYPE;
 
-                if (!lsf && channel.block_type == 2 && si.scfsi[ch] && result == 0)
+                if (!lsf && channel.block_type === 2 && si.scfsi[ch] && result === 0)
                     result = Mad.Error.BADSCFSI;
 
                 channel.region0_count = 7;
@@ -664,7 +664,7 @@ Mad.III_sideinfo = function (ptr, nch, lsf) {
 
                 if (ptr.read(1))
                     channel.flags |= Mad.mixed_block_flag;
-                else if (channel.block_type == 2)
+                else if (channel.block_type === 2)
                     channel.region0_count = 8;
 
                 for (var i = 0; i < 2; ++i)
@@ -708,7 +708,7 @@ Mad.III_scalefactors = function (ptr, channel, gr0ch, scfsi) {
     var slen1 = sflen_table[channel.scalefac_compress].slen1;
     var slen2 = sflen_table[channel.scalefac_compress].slen2;
 
-    if (channel.block_type == 2) {
+    if (channel.block_type === 2) {
         sfbi = 0;
 
         var nsfb = (channel.flags & Mad.mixed_block_flag) ? 8 + 3 * 3 : 6 * 3;
@@ -1080,17 +1080,17 @@ Mad.III_decode = function (ptr, frame, si, nch) {
 
             sfbwidth[ch] = sfbwidth_table[sfreqi].l;
 
-            if (channel.block_type == 2) {
+            if (channel.block_type === 2) {
                 sfbwidth[ch] = (channel.flags & Mad.mixed_block_flag) ?
                     sfbwidth_table[sfreqi].m : sfbwidth_table[sfreqi].s;
             }
 
             if (header.flags & Mad.Flag.LSF_EXT) {
                 part2_length = Mad.III_scalefactors_lsf(ptr, channel,
-                                                        ch == 0 ? 0 : si.gr[1].ch[1], header.mode_extension);
+                                                        ch === 0 ? 0 : si.gr[1].ch[1], header.mode_extension);
             } else {
                 part2_length = Mad.III_scalefactors(ptr, channel, si.gr[0].ch[ch],
-                                                    gr == 0 ? 0 : si.scfsi[ch]);
+                                                    gr === 0 ? 0 : si.scfsi[ch]);
             }
 
             error = Mad.III_huffdecode(ptr, xr[ch], channel, sfbwidth[ch], part2_length);
@@ -1109,7 +1109,7 @@ Mad.III_decode = function (ptr, frame, si, nch) {
         }
 
         /* joint stereo processing */
-        if ((header.mode == Mad.Mode.JOINT_STEREO) && (header.mode_extension != 0)) {
+        if ((header.mode === Mad.Mode.JOINT_STEREO) && (header.mode_extension != 0)) {
             error = Mad.III_stereo(xr, granule, header, sfbwidth[0]);
             
             if (error)
@@ -1125,12 +1125,12 @@ Mad.III_decode = function (ptr, frame, si, nch) {
             // var output = new Float64Array(new ArrayBuffer(8 * 36));
             var output = [];
 
-            if (channel.block_type == 2) {
+            if (channel.block_type === 2) {
                 Mad.III_reorder(xr[ch], channel, sfbwidth[ch]);
 
                 /*
                  * According to ISO/IEC 11172-3, "Alias reduction is not applied for
-                 * granules with block_type == 2 (short block)." However, other
+                 * granules with block_type === 2 (short block)." However, other
                  * sources suggest alias reduction should indeed be performed on the
                  * lower two subbands of mixed blocks. Most other implementations do
                  * this, so by default we will too.
@@ -1156,7 +1156,7 @@ Mad.III_decode = function (ptr, frame, si, nch) {
                     // sys.print("\nblocktype: " + block_type + " sb: " + sb + "\n");
                     // for (var i = 0; i < 18; i++) {
                     //     sys.print(output[i].toFixed(8) + "\t");
-                    //     if (i % 8 == 7) sys.print("\n");
+                    //     if (i % 8 === 7) sys.print("\n");
                     // }
 
                 }
@@ -1172,7 +1172,7 @@ Mad.III_decode = function (ptr, frame, si, nch) {
 
             /* (nonzero) subbands 2-31 */
             i = 576;
-            while (i > 36 && xr[ch][i - 1] == 0)
+            while (i > 36 && xr[ch][i - 1] === 0)
                 --i;
 
             sblimit = 32 - (((576 - i) / 18) << 0);
@@ -1238,7 +1238,7 @@ Mad.layer_III = function (stream, frame) {
     /* allocate Layer III dynamic structures */
     nch = header.nchannels();
     si_len = (header.flags & Mad.Flag.LSF_EXT) ?
-        (nch == 1 ? 9 : 17) : (nch == 1 ? 17 : 32);
+        (nch === 1 ? 9 : 17) : (nch === 1 ? 17 : 32);
 
     /* check frame sanity */
     if (stream.next_frame - stream.ptr.nextbyte() < si_len) {
@@ -1268,7 +1268,7 @@ Mad.layer_III = function (stream, frame) {
     
     //console.log("We're at " + stream.ptr.offset + ", data_bitlen = " + data_bitlen + ", priv_bitlen = " + priv_bitlen);
     
-    if (error && result == 0) {
+    if (error && result === 0) {
         stream.error = error;
         result = -1;
     }
@@ -1282,7 +1282,7 @@ Mad.layer_III = function (stream, frame) {
 
         header = peek.read(32);
         
-        if (Mad.bitwiseAnd(header, 0xffe60000) /* syncword | layer */ == 0xffe20000) { 
+        if (Mad.bitwiseAnd(header, 0xffe60000) /* syncword | layer */ === 0xffe20000) { 
             if (!(Mad.bitwiseAnd(header, 0x00010000)))  /* protection_bit */
                 peek.skip(16);  /* crc_check */
 
@@ -1306,7 +1306,7 @@ Mad.layer_III = function (stream, frame) {
 
     frame_used = 0;
     
-    if (si.main_data_begin == 0) {
+    if (si.main_data_begin === 0) {
         ptr = stream.ptr;
         stream.md_len = 0;
 
@@ -1314,7 +1314,7 @@ Mad.layer_III = function (stream, frame) {
     } else {
         //console.log("si.main_data_begin = " + si.main_data_begin + ", stream.md_len = " + stream.md_len);
         if (si.main_data_begin > stream.md_len) {
-            if (result == 0) {
+            if (result === 0) {
                 stream.error = Mad.Error.BADDATAPTR;
                 result = -1;
             }
@@ -1352,7 +1352,7 @@ Mad.layer_III = function (stream, frame) {
     frame_free = frame_space - frame_used;
 
     /* decode main_data */
-    if (result == 0) {
+    if (result === 0) {
         error = Mad.III_decode(ptr, frame, si, nch);
         
         if (error) {
@@ -1419,7 +1419,7 @@ Mad.III_exponents = function(channel, sfbwidth, exponents) {
     var gain = channel.global_gain - 210;
     var scalefac_multiplier = (channel.flags & Mad.scalefac_scale) ? 2 : 1;
     
-    if (channel.block_type == 2) {
+    if (channel.block_type === 2) {
         var sfbi = 0, l = 0;
         
         if (channel.flags & Mad.mixed_block_flag) {
@@ -1463,7 +1463,7 @@ Mad.III_exponents = function(channel, sfbwidth, exponents) {
 
 Mad.III_requantize = function(value, exp) {
     // usual (x >> 0) tricks to make sure frac and exp stay integers
-    var frac = (exp % 4) >> 0;  /* assumes sign(frac) == sign(exp) */
+    var frac = (exp % 4) >> 0;  /* assumes sign(frac) === sign(exp) */
     exp = (exp / 4) >> 0;
 
     var requantized = Math.pow(value, 4.0 / 3.0);
@@ -1555,14 +1555,14 @@ Mad.III_reorder = function (xr /* [576] */, channel, sfbwidth /* [39] */) {
     w = 0;
 
     for (var l = 18 * sb; l < 576; ++l) {
-        if (f-- == 0) {
+        if (f-- === 0) {
             f = sfbwidth[sfbwidthPointer++] - 1;
             w = (w + 1) % 3;
         }
         
         tmp[sbw[w]][w][sw[w]++] = xr[l];
 
-        if (sw[w] == 6) {
+        if (sw[w] === 6) {
             sw[w] = 0;
             ++sbw[w];
         }
@@ -1610,7 +1610,7 @@ Mad.III_stereo = function(xr /* [2][576] */, granule, header, sfbwidth) {
 
         /* first determine which scalefactor bands are to be processed */
 
-        if (right_ch.block_type == 2) {
+        if (right_ch.block_type === 2) {
             var lower, start, max, bound = [], w;
 
             lower = start = max = bound[0] = bound[1] = bound[2] = 0;
@@ -1717,7 +1717,7 @@ Mad.III_stereo = function(xr /* [2][576] */, granule, header, sfbwidth) {
 
                     left = xr[0][l + i];
 
-                    if (is_pos == 0)
+                    if (is_pos === 0)
                         xr[1][l + i] = left;
                     else {
                         var opposite;

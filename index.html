@@ -3,12 +3,12 @@
     <head>
         <meta charset="UTF-8" />
         <title>jsmad - javascript mp3 decoder</title>
-        <base href="http://jsmad.org" />
+        <!-- <base href="http://jsmad.org" /> -->
         <link rel="stylesheet" href="css/style.css" type="text/css" media="screen" />
     </head>
     <body>
         <div id="container">
-	<a href="http://github.com/you"><img style="position: absolute; top: 0; left: 0; border: 0;" src="https://a248.e.akamai.net/assets.github.com/img/bec6c51521dcc8148146135149fe06a9cc737577/687474703a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f6c6566745f6461726b626c75655f3132313632312e706e67" alt="Fork me on GitHub"></a>
+	<a href="http://github.com/nddrylliog/jsmad"><img style="position: absolute; top: 0; left: 0; border: 0;" src="https://a248.e.akamai.net/assets.github.com/img/bec6c51521dcc8148146135149fe06a9cc737577/687474703a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f6c6566745f6461726b626c75655f3132313632312e706e67" alt="Fork me on GitHub"></a>
             <div id="header">
                 <h1>
                     <span>JSMAD - JavaScript MPEG Audio Decoder</span>
@@ -64,21 +64,29 @@
         <script type="text/javascript" src="src/layer3.js"></script>
         <script type="text/javascript" src="src/frame.js"></script>
         <script type="text/javascript" src="src/synth.js"></script>
-        
-        <script type="text/javascript" src="src/bytestream.js"></script>
-        <script type="text/javascript" src="src/filestream.js"></script>
-        <script type="text/javascript" src="src/substream.js"></script>
+
+        <script type="text/javascript" src="/src/arraybuffer/bytestream.js"></script>
+        <script type="text/javascript" src="/src/arraybuffer/filestream.js"></script>
+        <script type="text/javascript" src="/src/arraybuffer/substream.js"></script>
+        <script type="text/javascript" src="/src/arraybuffer/arraystream.js"></script>
+
+        <script type="text/javascript" src="/src/binarystring/bytestream.js"></script>
+        <script type="text/javascript" src="/src/binarystring/filestream.js"></script>
+        <script type="text/javascript" src="/src/binarystring/substream.js"></script>
+        <script type="text/javascript" src="/src/binarystring/stringstream.js"></script>
+
+
+
         <script type="text/javascript" src="src/id3v22stream.js"></script>
         <script type="text/javascript" src="src/id3v23stream.js"></script>
         <script type="text/javascript" src="src/mp3file.js"></script>
-        
-        <script type="text/javascript" src="src/ajaxstream.js"></script>
-        <script type="text/javascript" src="src/stringstream.js"></script>
+
         <script type="text/javascript" src="src/player.js"></script>
         <script type="text/javascript" src="audiolib.js/lib/audiolib.min.js"></script>
         <script type="text/javascript" src="officialfm.js"></script>
         <script type="text/javascript" src="mhd.js"></script>
-        
+       
+        <!-- 
         <script>
           var _gaq = [['_setAccount', 'UA-24032051-1'], ['_trackPageview']];
           (function(d, t) {
@@ -88,5 +96,6 @@
             s.parentNode.insertBefore(g, s);
           }(document, 'script'));
         </script>
+        -->
     </body>
 </html>

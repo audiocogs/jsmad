@@ -16,8 +16,8 @@ Mad.Player.prototype.createDevice = function() {
 	var synth = new Mad.Synth();
 	this.frame = new Mad.Frame();
 	this.frame = Mad.Frame.decode(this.frame, this.mpeg);
-	if (this.frame == null) {
-		if (this.mpeg.error == Mad.Error.BUFLEN) {
+	if (this.frame === null) {
+		if (this.mpeg.error === Mad.Error.BUFLEN) {
 			console.log("End of file!");
 		}
 
@@ -60,8 +60,8 @@ Mad.Player.prototype.createDevice = function() {
 				self.offset = 0;
 
 				self.frame = Mad.Frame.decode(self.frame, self.mpeg);
-				if (self.frame == null) {
-					if (self.stream.error == Mad.Error.BUFLEN) {
+				if (self.frame === null) {
+					if (self.stream.error === Mad.Error.BUFLEN) {
 						console.log("End of file!");
 					}
 					console.log("Error! code = " + self.mpeg.error);

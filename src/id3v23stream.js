@@ -9,7 +9,7 @@ var stringToEncoding = function(string, encoding) {
         case 1:
             var ix = 2, offset1 = 1, offset2 = 0;
             
-            if (string.slice(0, 2) == "\xFE\xFF") {
+            if (string.slice(0, 2) === "\xFE\xFF") {
                 offset1 = 0, offset2 = 1;
             } else {
                 offset1 = 1, offset2 = 0;
@@ -46,14 +46,14 @@ var stringToEncoding = function(string, encoding) {
 var decodeTerminatedString = function(header, stream) {
 
 	// skip text encoding (nobody cares, always ISO-8559-15)
-	stream.read(1);
+	stream.readAsString(1);
 
 	var c;
 	
 	var mimetype = "";
 	while(true) {
-		c = stream.read(1);
-		if(c == "\0") {
+		c = stream.readAsString(1);
+		if(c === "\0") {
 			break;
 		}
 		mimetype += c;
@@ -62,8 +62,8 @@ var decodeTerminatedString = function(header, stream) {
 	
 	var filename = "";
 	while(true) {
-		c = stream.read(1);
-		if(c == "\0") {
+		c = stream.readAsString(1);
+		if(c === "\0") {
 			break;
 		}
 		filename += c;
@@ -72,22 +72,22 @@ var decodeTerminatedString = function(header, stream) {
 	
 	var contentDescription = "";
 	while(true) {
-		c = stream.read(1);
-		if(c == "\0") {
+		c = stream.readAsString(1);
+		if(c === "\0") {
 			break;
 		}
 		contentDescription += c;
 	}
 	console.log("contentDescription = " + contentDescription);
 	
-	var objectName = stream.read(4);
+	var objectName = stream.readAsString(4);
 	
 	// skip 4 bytes, then read binary length
-	stream.read(4);
+	stream.readAsString(4);
 	var length = stream.readU32(true) - 4;
 	
 	if(length > header.length) return null;
-	var value = stream.read(length);
+	var value = stream.readAsString(length);
 	
 	return {
 		'header': header,
@@ -101,7 +101,7 @@ var decodeTerminatedString = function(header, stream) {
 
 var decodeTextFrame = function(header, stream) {
     var encoding = stream.readU8();
-    var data = stream.read(header['length'] - 1);
+    var data = stream.readAsString(header['length'] - 1);
     
     return {
         'header': header,
@@ -112,7 +112,7 @@ var decodeTextFrame = function(header, stream) {
 var decodeAttachedPictureFrame = function(header, stream) {
     var encoding = stream.readU8();
     
-    var data = stream.read(header['length'] - 1);
+    var data = stream.readAsString(header['length'] - 1);
     
     var array = data.split("\0");
     
@@ -126,7 +126,7 @@ var decodeAttachedPictureFrame = function(header, stream) {
 }
 
 var decodeIdentifierFrame = function(header, stream) {
-    var data = stream.read(header['length']);
+    var data = stream.readAsString(header['length']);
     
     var array = data.split("\0", 2);
     
@@ -140,9 +140,9 @@ var decodeIdentifierFrame = function(header, stream) {
 
 var decodeCommentFrame = function(header, stream) {
     var encoding = stream.readU8();
-    var language = stream.read(3);
+    var language = stream.readAsString(3);
     
-    var data = stream.read(header['length'] - 4);
+    var data = stream.readAsString(header['length'] - 4);
     
     var array = data.split("\0", 2);
     
@@ -155,7 +155,7 @@ var decodeCommentFrame = function(header, stream) {
 }
 
 var decodeBinaryFrame = function(header, stream) {
-    var data = stream.read(header['length']);
+    var data = stream.readAsString(header['length']);
     
     return {
         'header': header,
@@ -165,7 +165,7 @@ var decodeBinaryFrame = function(header, stream) {
 
 var decodeUserDefinedLinkFrame = function(header, stream) {
     var encoding = stream.readU8();
-    var data = stream.read(header['length'] - 1);
+    var data = stream.readAsString(header['length'] - 1);
     
     var array = data.split("\0", 2);
     
@@ -503,9 +503,9 @@ Mad.ID3v23Stream.prototype.readFrame = function() {
         return null;
     }
     
-    var identifier = this.stream.read(4);
+    var identifier = this.stream.readAsString(4);
     
-    if (identifier.charCodeAt(0) == 0) {
+    if (identifier.charCodeAt(0) === 0) {
         this.offset = this.header.length + 1;
         return null;
     }
@@ -529,7 +529,7 @@ Mad.ID3v23Stream.prototype.readFrame = function() {
             'header': header
         };
         
-        this.stream.read(Math.min(length, this.header.length - this.offset));
+        this.stream.readAsString(Math.min(length, this.header.length - this.offset));
 	}
     
     if(result) {
@@ -547,14 +547,14 @@ Mad.ID3v23Stream.prototype.read = function() {
         
         var frame = null;
         
-        try {
+        //try {
             while (frame = this.readFrame()) {
                 this.array.push(frame);
             }
-        } catch (e) {
-            throw(e);
+        //} catch (e) {
+            //throw(e);
             //console.log("ID3 Error: " + e);
-        }
+        //}
     }
     
     return this.array;
