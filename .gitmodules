@@ -1,3 +1,6 @@
 [submodule "audiolib.js"]
 	path = audiolib.js
 	url = git://github.com/jussi-kalliokoski/audiolib.js.git
+[submodule "sink.js"]
+	path = sink.js
+	url = https://github.com/jussi-kalliokoski/sink.js.git

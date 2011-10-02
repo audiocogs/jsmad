@@ -9,20 +9,25 @@ Mad.ArrayBuffers.AjaxStream = Mad.ArrayBuffers.ByteStream.extend({
         this.request = request;
         this.amountRead = 0;
         this.inProgress = true;
+        this.finalAmount = false;
         this.callbacks = [];
+        this.buffer = new Uint8Array(0);
         
         var self = this;
         
         var iteration = 0;
         
         var ochange = function () {
+            console.log("ochange! callbacks.length = " + self.callbacks.length + ", iteration = " + iteration);
+            console.log("readyState = " + request.readyState + ", amountRead = " + self.amountRead + ", contentLength = " + self.contentLength);
             iteration += 1;
-            if ((self.callbacks.length > 0 && iteration % 64 === 0) || iteration % 256 === 0) {
+            if ((self.callbacks.length > 0 && iteration % 32 === 0) || iteration % 256 === 0) {
                 self.updateBuffer();
                 
                 var newCallbacks = [];
                 
                 for (var i = 0; i < self.callbacks.length; i++) {
+                    console.log("Handling callback " + i);
                     var callback = self.callbacks[i];
                     
                     if (callback[0] < self.amountRead) {
@@ -40,7 +45,8 @@ Mad.ArrayBuffers.AjaxStream = Mad.ArrayBuffers.ByteStream.extend({
             }
             
             if (request.readyState === 4) {
-                            self.amountRead = self.contentLength;
+                self.updateBuffer();
+                self.amountRead = self.contentLength;
                 for (var i = 0; i < self.callbacks.length; i++) {
                     var callback = self.callbacks[i];
                     callback[1]();
@@ -52,17 +58,20 @@ Mad.ArrayBuffers.AjaxStream = Mad.ArrayBuffers.ByteStream.extend({
             }
         }
         
-        request.onreadchange = ochange;
+        request.onprogress = ochange;
         
         this.timer = window.setInterval(ochange, 250);
         
         request.send(null);
-    },,
+    },
 
     updateBuffer: function() {
-        if (!this.finalAmount) {
-            this.buffer = this.request.response;
+        console.log("updateBuffer!");
+        if (!this.finalAmount && this.request.response) {
+            this.arrayBuffer = this.request.response;
+            this.buffer = new Uint8Array(this.arrayBuffer);
             this.amountRead = this.buffer.length;
+            console.log("typeof buffer = " + typeof(this.arrayBuffer) + ", amountRead = " + this.amountRead);
             this.contentLength = this.request.getResponseHeader('Content-Length');
             if(!this.contentLength) {
                 // if the server doesn't send a Content-Length Header, just use amountRead instead
@@ -100,9 +109,7 @@ Mad.ArrayBuffers.AjaxStream = Mad.ArrayBuffers.ByteStream.extend({
 
     read: function(n) {
         var result = this.peek(n);
-        
         this.seek(n);
-        
         return result;
     },
 
@@ -131,10 +138,17 @@ Mad.ArrayBuffers.AjaxStream = Mad.ArrayBuffers.ByteStream.extend({
         return this.buffer[offset];
     },
 
+    substream: function (offset, length) {
+        return new Mad.ArrayBuffers.SubStream(this, offset, length);
+    },
+
     requestAbsolute: function(n, callback) {
+        console.log("requestAbsolute(" + n + ", ...), amountRead = " + this.amountRead);
         if (n < this.amountRead) {
+            console.log("all fine, calling callback :)");
             callback();
         } else {
+            console.log("pushing callback on queue");
             this.callbacks.push([n, callback]);
         }
     },
@@ -142,4 +156,4 @@ Mad.ArrayBuffers.AjaxStream = Mad.ArrayBuffers.ByteStream.extend({
     request: function(n, callback) {
         this.requestAbsolute(this.offset + n, callback);
     }
-}
+});

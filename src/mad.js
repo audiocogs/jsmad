@@ -36,6 +36,9 @@ if (!Mad.enforceBinaryString && typeof(ArrayBuffer) === 'function' && typeof(Uin
     Mad.FileStream = function (file, callback) {
         return new Mad.ArrayBuffers.FileStream(file, callback);
     }
+    Mad.AjaxStream = function (file, callback) {
+        return new Mad.ArrayBuffers.AjaxStream(file, callback);
+    }
 } else {
     console.log("Using BinaryString");
     Mad.Storage = {
@@ -52,6 +55,9 @@ if (!Mad.enforceBinaryString && typeof(ArrayBuffer) === 'function' && typeof(Uin
     };
     Mad.FileStream = function (file, callback) {
         return new Mad.BinaryStrings.FileStream(file, callback);
+    }
+    Mad.AjaxStream = function (file, callback) {
+        return new Mad.BinaryStrings.AjaxStream(file, callback);
     }
 }
 

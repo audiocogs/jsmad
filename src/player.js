@@ -83,7 +83,7 @@ Mad.Player.prototype.createDevice = function() {
 Mad.Player.prototype.reinitDevice = function() {
 	if(this.dev) this.dev.kill();
 	var preBufferSize = 65536 * 4096;
-	this.dev = audioLib.AudioDevice(this.refill, this.channelCount, preBufferSize, this.sampleRate);
+	this.dev = Sink(this.refill, this.channelCount, preBufferSize, this.sampleRate);
 }
 
 Mad.Player.prototype.setPlaying = function(playing) {
@@ -130,7 +130,7 @@ Mad.Player.fromFile = function (file, callback) {
 
 Mad.Player.fromURL = function (url, callback) {
     var stream = new Mad.AjaxStream(url);
-    stream.requestAbsolute(128 * 1024, function () {
+    stream.requestAbsolute(1 * 1024, function () {
         callback(new Mad.Player(stream));
     });
 };

@@ -101,7 +101,7 @@
                 self.ofmTrack = track;
                 Mad.Player.fromURL( url, function( player )
                 {
-                    self.usePlayer( player );
+                    setTimeout(function () { self.usePlayer( player ) }, 1000);
                 } );
             } );
         },

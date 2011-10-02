@@ -59,7 +59,7 @@ Mad.BinaryStrings.AjaxStream = function(url) {
     request.send(null);
 }
 
-Mad.BinaryStrings.AjaxStream.prototype = new Mad.ByteStream();
+Mad.BinaryStrings.AjaxStream.prototype = new Mad.BinaryStrings.ByteStream();
 
 Mad.BinaryStrings.AjaxStream.prototype.updateBuffer = function() {
     if (!this.finalAmount) {
