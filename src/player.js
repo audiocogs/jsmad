@@ -75,6 +75,10 @@ Mad.Player.prototype.createDevice = function() {
 			}
 		}
 
+		if (self.onPostProcessing) {
+			self.onPostProcessing.apply(this, arguments);
+		}
+
 	};
 	
 	this.reinitDevice();
@@ -83,7 +87,10 @@ Mad.Player.prototype.createDevice = function() {
 Mad.Player.prototype.reinitDevice = function() {
 	if(this.dev) this.dev.kill();
 	var preBufferSize = 65536 * 4096;
-	this.dev = Sink(this.refill, this.channelCount, preBufferSize, this.sampleRate);
+	var self = this;
+	this.dev = Sink(function(){
+		return self.refill.apply(this, arguments);
+	}, this.channelCount, preBufferSize, this.sampleRate);
 }
 
 Mad.Player.prototype.setPlaying = function(playing) {
