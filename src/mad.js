@@ -25,7 +25,7 @@ if (!Mad.enforceBinaryString && typeof(ArrayBuffer) === 'function' && typeof(Uin
                 srcOffset += pSrc.start;
                 pSrc = pSrc.parentStream;
             }
-            var src = pSrc.buffer;
+            var src = pSrc.subarray ? pSrc : pSrc.buffer;
             var subarr = src.subarray(srcOffset, srcOffset + length);
 
             // oh my, memcpy actually exists in JavaScript?
