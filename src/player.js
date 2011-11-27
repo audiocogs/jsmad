@@ -86,9 +86,10 @@ Mad.Player.prototype.createDevice = function() {
 
 Mad.Player.prototype.reinitDevice = function() {
 	if(this.dev) this.dev.kill();
-	var preBufferSize = 65536 * 4096;
+	var preBufferSize = this.sampleRate / 2//65536 * 4096;
 	var self = this;
 	this.dev = Sink(function(){
+		self.dev.preBufferSize = 12000;
 		return self.refill.apply(this, arguments);
 	}, this.channelCount, preBufferSize, this.sampleRate);
 }
