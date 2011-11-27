@@ -61,12 +61,12 @@ var sfbwidth_table = [
     { l: sfb_48000_long, s: sfb_48000_short, m: sfb_48000_mixed },
     { l: sfb_44100_long, s: sfb_44100_short, m: sfb_44100_mixed },
     { l: sfb_32000_long, s: sfb_32000_short, m: sfb_32000_mixed } /*, // fuck MPEG 2.5
-                                                                    { l: sfb_24000_long, s: sfb_24000_short, m: sfb_24000_mixed },
-                                                                    { l: sfb_22050_long, s: sfb_22050_short, m: sfb_22050_mixed },
-                                                                    { l: sfb_16000_long, s: sfb_16000_short, m: sfb_16000_mixed },
-                                                                    { l: sfb_12000_long, s: sfb_12000_short, m: sfb_12000_mixed },
-                                                                    { l: sfb_11025_long, s: sfb_11025_short, m: sfb_11025_mixed },
-                                                                    { l:  sfb_8000_long, s:  sfb_8000_short, m:  sfb_8000_mixed }*/
+    { l: sfb_24000_long, s: sfb_24000_short, m: sfb_24000_mixed },
+    { l: sfb_22050_long, s: sfb_22050_short, m: sfb_22050_mixed },
+    { l: sfb_16000_long, s: sfb_16000_short, m: sfb_16000_mixed },
+    { l: sfb_12000_long, s: sfb_12000_short, m: sfb_12000_mixed },
+    { l: sfb_11025_long, s: sfb_11025_short, m: sfb_11025_mixed },
+    { l:  sfb_8000_long, s:  sfb_8000_short, m:  sfb_8000_mixed }*/
 ];
 
 var pretab /* [22] */ = [

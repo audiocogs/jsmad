@@ -1,46 +1,46 @@
 
 var bitrate_table /* [5][15] */ = [
-  /* MPEG-1 */
-  [ 0,  32000,  64000,  96000, 128000, 160000, 192000, 224000,  /* Layer I   */
-       256000, 288000, 320000, 352000, 384000, 416000, 448000 ],
-  [ 0,  32000,  48000,  56000,  64000,  80000,  96000, 112000,  /* Layer II  */
-       128000, 160000, 192000, 224000, 256000, 320000, 384000 ],
-  [ 0,  32000,  40000,  48000,  56000,  64000,  80000,  96000,  /* Layer III */
-       112000, 128000, 160000, 192000, 224000, 256000, 320000 ],
+/* MPEG-1 */
+[ 0,  32000,  64000,  96000, 128000, 160000, 192000, 224000,  /* Layer I   */
+    256000, 288000, 320000, 352000, 384000, 416000, 448000 ],
+    [ 0,  32000,  48000,  56000,  64000,  80000,  96000, 112000,  /* Layer II  */
+    128000, 160000, 192000, 224000, 256000, 320000, 384000 ],
+    [ 0,  32000,  40000,  48000,  56000,  64000,  80000,  96000,  /* Layer III */
+    112000, 128000, 160000, 192000, 224000, 256000, 320000 ],
 
-  /* MPEG-2 LSF */
-  [ 0,  32000,  48000,  56000,  64000,  80000,  96000, 112000,  /* Layer I   */
-       128000, 144000, 160000, 176000, 192000, 224000, 256000 ],
-  [ 0,   8000,  16000,  24000,  32000,  40000,  48000,  56000,  /* Layers    */
-        64000,  80000,  96000, 112000, 128000, 144000, 160000 ] /* II & III  */
-];
+    /* MPEG-2 LSF */
+    [ 0,  32000,  48000,  56000,  64000,  80000,  96000, 112000,  /* Layer I   */
+    128000, 144000, 160000, 176000, 192000, 224000, 256000 ],
+    [ 0,   8000,  16000,  24000,  32000,  40000,  48000,  56000,  /* Layers    */
+    64000,  80000,  96000, 112000, 128000, 144000, 160000 ] /* II & III  */
+    ];
 
-var samplerate_table /* [3] */ = [ 44100, 48000, 32000 ];
+    var samplerate_table /* [3] */ = [ 44100, 48000, 32000 ];
 
-var decoder_table = [
+    var decoder_table = [
     function() { console.log("Layer I decoding is not implemented!"); },
     function() { console.log("Layer II decoding is not implemented!"); },
     Mad.layer_III
-];
+    ];
 
-Mad.Layer = {
-    I: 1,
-    II: 2,
-    III: 3
-};
+    Mad.Layer = {
+I: 1,
+   II: 2,
+   III: 3
+    };
 
 Mad.Mode = {
-    SINGLE_CHANNEL      : 0,
-    DUAL_CHANNEL        : 1,      /* dual channel */
-    JOINT_STEREO        : 2,      /* joint (MS/intensity) stereo */
-    STEREO              : 3       /* normal LR stereo */
+SINGLE_CHANNEL      : 0,
+                      DUAL_CHANNEL        : 1,      /* dual channel */
+                      JOINT_STEREO        : 2,      /* joint (MS/intensity) stereo */
+                      STEREO              : 3       /* normal LR stereo */
 };
 
 Mad.Emphasis = {
-    NONE       : 0,     /* no emphasis */
-    _50_15_US  : 1,     /* 50/15 microseconds emphasis */
-    CCITT_J_17 : 3,     /* CCITT J.17 emphasis */
-    RESERVED   : 2      /* unknown emphasis */
+NONE       : 0,     /* no emphasis */
+             _50_15_US  : 1,     /* 50/15 microseconds emphasis */
+             CCITT_J_17 : 3,     /* CCITT J.17 emphasis */
+             RESERVED   : 2      /* unknown emphasis */
 };
 
 Mad.Header = function () {
@@ -67,13 +67,13 @@ Mad.Header.prototype.nchannels = function () {
 
 Mad.Header.prototype.nbsamples = function() {
     return (this.layer === Mad.Layer.I ? 12 : 
-        ((this.layer === Mad.Layer.III && (this.flags & Mad.Flag.LSF_EXT)) ? 18 : 36));
+            ((this.layer === Mad.Layer.III && (this.flags & Mad.Flag.LSF_EXT)) ? 18 : 36));
 }
 
 /* libmad's decode_header */
 Mad.Header.actually_decode = function(stream) {
     var header = new Mad.Header();
-    
+
     header.flags        = 0;
     header.private_bits = 0;
 
@@ -81,7 +81,7 @@ Mad.Header.actually_decode = function(stream) {
 
     /* syncword */
     stream.ptr.skip(11);
-    
+
     /* MPEG 2.5 indicator (really part of syncword) */
     if (stream.ptr.read(1) === 0) {
         header.flags |= Mad.Flag.MPEG_2_5_EXT;
@@ -165,26 +165,26 @@ Mad.Header.actually_decode = function(stream) {
 
     /* emphasis */
     header.emphasis = stream.ptr.read(2);
-    
+
     /* error_check() */
 
     /* crc_check */
     if (header.flags & Mad.Flag.PROTECTION)
         header.crc_target = stream.ptr.read(16);
-    
+
     return header;
 }
 
 /* libmad's mad_header_decode */
 Mad.Header.decode = function(stream) {
     var header = null;
-    
+
     // those are actually pointers. javascript powa.
     var ptr = stream.next_frame;
     var end = stream.bufend;
     var pad_slot = 0;
     var N = 0;
-    
+
     /* stream skip */
     if (stream.skiplen) {
         if (!stream.sync)
@@ -209,7 +209,7 @@ Mad.Header.decode = function(stream) {
 
     while(syncing) {
         syncing = false;
- 
+
         /* synchronize */
         try {
             if (stream.sync) {
@@ -240,9 +240,9 @@ Mad.Header.decode = function(stream) {
             }
         } catch (e) {
             console.log("Synchronization error: " + e);
-            
+
             stream.error = Mad.Error.BUFLEN;
-            
+
             return null;
         }
 
@@ -251,7 +251,7 @@ Mad.Header.decode = function(stream) {
         stream.next_frame = ptr + 1;  /* possibly bogus sync word */
 
         stream.ptr = new Mad.Bit(stream.stream, stream.this_frame);
-        
+
         header = Mad.Header.actually_decode(stream);
         if(header === null) return null; // well Duh^2
 
@@ -267,14 +267,14 @@ Mad.Header.decode = function(stream) {
             console.log("Uh oh, a free bitrate stream. We're fucked.");
             stream.error = Mad.Error.BADDATAPTR; // best guess
             return null;
-            
-    //        if ((stream.freerate === 0 || !stream.sync ||
-    //                        (header.layer === Mad.Layer.III && stream.freerate > 640000)) &&
-    //                free_bitrate(stream, header) === -1)
-    //            return null;
-    //
-    //        header.bitrate = stream.freerate;
-    //        header.flags  |= Mad.Flag.FREEFORMAT;
+
+            //        if ((stream.freerate === 0 || !stream.sync ||
+            //                        (header.layer === Mad.Layer.III && stream.freerate > 640000)) &&
+            //                free_bitrate(stream, header) === -1)
+            //            return null;
+            //
+            //        header.bitrate = stream.freerate;
+            //        header.flags  |= Mad.Flag.FREEFORMAT;
         }
 
         /* calculate beginning of next frame */
@@ -284,12 +284,12 @@ Mad.Header.decode = function(stream) {
             N = (((12 * header.bitrate / header.samplerate) << 0) + pad_slot) * 4;
         } else {
             var slots_per_frame = (header.layer === Mad.Layer.III &&
-                   (header.flags & Mad.Flag.LSF_EXT)) ? 72 : 144;
+                    (header.flags & Mad.Flag.LSF_EXT)) ? 72 : 144;
             //console.log("slots_per_frame = " + slots_per_frame + ", bitrate = " + header.bitrate + ", samplerate = " + header.samplerate);
 
             N = ((slots_per_frame * header.bitrate / header.samplerate) << 0) + pad_slot;
         }
-            
+
 
         /* verify there is enough data left in buffer to decode this frame */
         if (N + Mad.BUFFER_GUARD > end - stream.this_frame) {
@@ -308,7 +308,7 @@ Mad.Header.decode = function(stream) {
             ptr = stream.next_frame;
             if (!(stream.getU8(ptr) === 0xff && (stream.getU8(ptr + 1) & 0xe0) === 0xe0)) {
                 ptr = stream.next_frame = stream.this_frame + 1;
-          
+
                 // emulating 'goto sync'
                 syncing = true;
                 continue;
@@ -316,14 +316,14 @@ Mad.Header.decode = function(stream) {
             stream.sync = 1;
         }
     } // end of goto emulation (label 'sync')
-    
+
     header.flags |= Mad.Flag.INCOMPLETE;
     return header;
 }
 
 Mad.Frame = function () {
     this.header = new Mad.Header();     /* MPEG audio header */
-    
+
     this.options = 0;                   /* decoding options (from stream) */
 
     // sbsample[2][36][32]
@@ -338,7 +338,7 @@ Mad.Frame = function () {
             }
         }
     }
-    
+
     // overlap[2][32][18]
     this.overlap = []; /* Layer III block overlap data */
     for(var ch = 0; ch < 2; ch++) {
@@ -355,7 +355,7 @@ Mad.Frame = function () {
 
 Mad.Frame.decode = function(frame, stream) {
     frame.options = stream.options;
-    
+
     /* header() */
     /* error_check() */
 
@@ -375,7 +375,7 @@ Mad.Frame.decode = function(frame, stream) {
         }
         throw 'Decoder table error';
     }
-    
+
     return frame;
 };
 
@@ -388,24 +388,24 @@ Mad.overlapIndex = function (i, j, k) {
 };
 
 Mad.Flag = {
-    NPRIVATE_III   : 0x0007,   /* number of Layer III private bits */
-    INCOMPLETE : 0x0008,   /* header but not data is decoded */
+NPRIVATE_III   : 0x0007,   /* number of Layer III private bits */
+                 INCOMPLETE : 0x0008,   /* header but not data is decoded */
 
-    PROTECTION : 0x0010,   /* frame has CRC protection */
-    COPYRIGHT  : 0x0020,   /* frame is copyright */
-    ORIGINAL   : 0x0040,   /* frame is original (else copy) */
-    PADDING    : 0x0080,   /* frame has additional slot */
+                 PROTECTION : 0x0010,   /* frame has CRC protection */
+                 COPYRIGHT  : 0x0020,   /* frame is copyright */
+                 ORIGINAL   : 0x0040,   /* frame is original (else copy) */
+                 PADDING    : 0x0080,   /* frame has additional slot */
 
-    I_STEREO   : 0x0100,   /* uses intensity joint stereo */
-    MS_STEREO  : 0x0200,   /* uses middle/side joint stereo */
-    FREEFORMAT : 0x0400,   /* uses free format bitrate */
+                 I_STEREO   : 0x0100,   /* uses intensity joint stereo */
+                 MS_STEREO  : 0x0200,   /* uses middle/side joint stereo */
+                 FREEFORMAT : 0x0400,   /* uses free format bitrate */
 
-    LSF_EXT    : 0x1000,   /* lower sampling freq. extension */
-    MC_EXT : 0x2000,   /* multichannel audio extension */
-    MPEG_2_5_EXT   : 0x4000    /* MPEG 2.5 (unofficial) extension */
+                 LSF_EXT    : 0x1000,   /* lower sampling freq. extension */
+                 MC_EXT : 0x2000,   /* multichannel audio extension */
+                 MPEG_2_5_EXT   : 0x4000    /* MPEG 2.5 (unofficial) extension */
 };
 
 Mad.Private = {
-    HEADER  : 0x0100,   /* header private bit */
-    III : 0x001f    /* Layer III private bits (up to 5) */
+HEADER  : 0x0100,   /* header private bit */
+          III : 0x001f    /* Layer III private bits (up to 5) */
 };
