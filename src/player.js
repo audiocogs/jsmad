@@ -5,6 +5,8 @@ Mad.Player = function (stream) {
     this.id3  = this.mp3.getID3v2Stream();
     this.mpeg = this.mp3.getMpegStream();
 
+    this.totalLength = ~~this.id3.toHash()['Length'];
+
     // default onProgress handler
     this.onProgress = function (playtime, total, preloaded) {
         console.log("playtime = " + playtime + " / " + total + ", preloaded = " + preloaded);
@@ -119,10 +121,10 @@ Mad.Player.prototype.progress = function () {
 	
     var playtime = ((this.absoluteFrameIndex * 1152 + this.offset) / this.sampleRate) + delta / 1000.0;
     //console.log("delta = " + delta + ", contentLength = " + this.stream.contentLength + ", this.offset = " + this.mpeg.this_frame);
-    var total = playtime * this.stream.contentLength / this.mpeg.this_frame;
-	var preloaded = this.stream.amountRead / this.stream.contentLength;
-	//console.log("amountRead = " + this.stream.amountRead + ", preloaded = " + preloaded);
-	this.onProgress(playtime, total, preloaded);
+    var total = this.totalLength ? this.totalLength : playtime * this.stream.contentLength / this.mpeg.this_frame;
+    var preloaded = this.stream.amountRead / this.stream.contentLength;
+    //console.log("amountRead = " + this.stream.amountRead + ", preloaded = " + preloaded);
+    this.onProgress(playtime, total, preloaded);
     
     var that = this;
     var nextCall = function() { that.progress(); };
