@@ -93,6 +93,10 @@ Mad.Player.prototype.reinitDevice = function() {
     this.dev = Sink(function(){
             return self.refill.apply(this, arguments);
             }, this.channelCount, preBufferSize, this.sampleRate);
+
+    this.dev.on && this.dev.on('error', function (e) {
+        console.log(e);
+    });
 }
 
 Mad.Player.prototype.setPlaying = function(playing) {
