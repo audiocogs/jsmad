@@ -93,6 +93,10 @@ Mad.Player.prototype.reinitDevice = function() {
     this.dev = Sink(function(){
             return self.refill.apply(this, arguments);
             }, this.channelCount, preBufferSize, this.sampleRate);
+
+    this.dev.on && this.dev.on('error', function (e) {
+        console.log(e);
+    });
 }
 
 Mad.Player.prototype.setPlaying = function(playing) {
@@ -113,11 +117,6 @@ Mad.Player.prototype.destroy = function() {
 
 Mad.Player.prototype.progress = function () {
     var delta = Date.now() - this.lastRebuffer;
-    if(delta > 1000) {
-        // freaking Firefox sometimes fails at scheduling tasks and we lose audio streaming
-        console.log("Device reinit - buffer underflow.");
-        this.reinitDevice();
-    }
 
     var playtime = ((this.absoluteFrameIndex * 1152 + this.offset) / this.sampleRate) + delta / 1000.0;
     //console.log("delta = " + delta + ", contentLength = " + this.stream.contentLength + ", this.offset = " + this.mpeg.this_frame);
