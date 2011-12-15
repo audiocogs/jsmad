@@ -130,9 +130,10 @@
             
             this.player = player;
             
-            if (player.id3) {
+            // Workaround for MP3s without ID3, all is going to be undefined
+            if (player.id3 || true) {
                 
-                var id3        = player.id3.toHash(),
+                var id3        = player.id3 ? player.id3.toHash() : {},
                     id3element = self.el.id3,
                     id3string  = "<div class='player'><div class='picture'>",
                     pictures   = id3['Attached picture'],
