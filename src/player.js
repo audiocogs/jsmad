@@ -91,6 +91,10 @@ Mad.Player.prototype.reinitDevice = function() {
     // The default value is the safest
     var bufferSize = null;
     var self = this;
+
+    var temp = Sink.sinks.moz.prototype.interval;
+    Sink.sinks.moz.prototype.interval = 100;
+
     this.dev = Sink(function(){
             return self.refill.apply(this, arguments);
     }, this.channelCount, bufferSize, this.sampleRate);
@@ -98,6 +102,8 @@ Mad.Player.prototype.reinitDevice = function() {
     this.dev.on && this.dev.on('error', function (e) {
         console.log(e);
     });
+
+    Sink.sinks.moz.prototype.interval = temp;
 }
 
 Mad.Player.prototype.setPlaying = function(playing) {
