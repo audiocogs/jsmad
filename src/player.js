@@ -5,7 +5,7 @@ Mad.Player = function (stream) {
     this.id3  = this.mp3.getID3v2Stream();
     this.mpeg = this.mp3.getMpegStream();
 
-    this.totalLength = ~~this.id3.toHash()['Length'];
+    this.totalLength = this.id3 && ~~this.id3.toHash()['Length'];
 
     // default onProgress handler
     this.onProgress = function (playtime, total, preloaded) {
