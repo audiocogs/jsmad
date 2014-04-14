@@ -1,3 +1,5 @@
+## Deprecated! Please use [mp3.js](https://github.com/audiocogs/mp3.js) and [aurora.js](https://github.com/audiocogs/aurora.js) instead.
+
 ## About
 
 jsmad is a pure javascript MP3 decoder, based on [libmad](http://www.underbit.com/products/mad/), with an ID3 decoder written from scratch.
